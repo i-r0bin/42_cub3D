@@ -24,9 +24,14 @@ void	init_data(t_data *data)
 void	init_mlx(t_data *data)
 {
     data->mlx_ptr = mlx_init();
+    if (data->mlx_ptr == NULL)
+        cub_exit(data);
     data->win_ptr = mlx_new_window(data->mlx_ptr, data->img_width, data->img_height, "cub3D");
+    if (data->win_ptr == NULL)
+        cub_exit(data);
     data->img = mlx_new_image(data->mlx_ptr, data->img_width, data->img_height);
-    data->img_addr = (int *)mlx_get_data_addr(data->img, &data->bpp, &data->size_l, &data->endian);
+    if (data->img == NULL)
+		cub_exit(data);
 }
 
 void	init_textures(t_data *data)

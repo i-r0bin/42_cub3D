@@ -89,5 +89,4 @@ void    draw_map(t_data *data)
         y++;
     }
     draw_point(data, data->player_x, data->player_y);
-    mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img, 0, 0);
 }

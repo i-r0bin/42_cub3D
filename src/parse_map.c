@@ -27,6 +27,8 @@ int	parse_map(t_data *data, char *line)
     {
         if (line[j] == 'W' || line[j] == 'E' || line[j] == 'N' || line[j] == 'S')
         {
+            if (data->player_dir != '0')
+                return (err_msg("Invalid map\nError", ENOEXEC));
             data->player_x = j;
             data->player_y = i;
             data->player_dir = line[j];

@@ -2,18 +2,21 @@
 
 int	parse_args(t_data *data, char **av)
 {
-    int fd;
-    int ret;
+    int     fd;
+    char    *format;
+    int     ret;
 
+    format = ft_strrchr(av[1], '.');
+    if (!format || ft_strlen(format) != 4 || ft_strncmp(ft_strrchr(av[1], '.'), ".cub", 4) != 0)
+        return (err_msg("Invalid file extension\nError", EINVAL));
     fd = open(av[1], O_RDONLY);
     if (fd == -1)
-        return (err_msg("Error", ERR_FILE, 0));
+        return (err_msg("Could not open file\nError", errno));
     ret = parse_file(data, fd);
     close(fd);
     return (ret);
 }
 
-// check_file_error da implementare
 int	parse_file(t_data *data, int fd)
 {
     char *line;
@@ -30,6 +33,8 @@ int	parse_file(t_data *data, int fd)
     }
     if (line)
         free(line);
+    if (!data->map)
+        return (err_msg("Invalid map\nError", ENOEXEC));
     return (0);
 }
 
@@ -52,7 +57,7 @@ int	parse_line(t_data *data, char *line)
     else if (line[0] == '1' || line[0] == ' ')
         return (parse_map(data, line));
     else if (line[0] != '\0' && line[0] != '\n')
-        return (err_msg("Error", ERR_MAP, 0));
+        return (err_msg("Invalid map\nError", ENOEXEC));
     return (0);
 }
 
