@@ -17,32 +17,43 @@ void	init_data(t_data *data)
     data->player_speed = 0;
     data->player_rot_speed = 0;
     init_textures(data);
-    data->floor_color = 0;
-    data->ceiling_color = 0;
+    data->floor_color = -1;
+    data->ceiling_color = -1;
 }
 
 void	init_mlx(t_data *data)
 {
     data->mlx_ptr = mlx_init();
     if (data->mlx_ptr == NULL)
-        cub_exit(data);
+        handle_error(data, EIO, "Failed to initialize mlx.");
     data->win_ptr = mlx_new_window(data->mlx_ptr, data->img_width, data->img_height, "cub3D");
     if (data->win_ptr == NULL)
-        cub_exit(data);
+        handle_error(data, EIO, "Failed to create window.");
     data->img = mlx_new_image(data->mlx_ptr, data->img_width, data->img_height);
     if (data->img == NULL)
-		cub_exit(data);
+		handle_error(data, EIO, "Failed to create image.");
 }
 
 void	init_textures(t_data *data)
 {
     int i;
 
-    data->wall_textures = ft_calloc(5, sizeof(char *));
+    data->wall_textures = ft_calloc(4, sizeof(char *));
     i = 0;
-    while (i < 5)
+    while (i < 4)
     {
         data->wall_textures[i] = NULL;
         i++;
     }
+}
+
+int	set_image(t_data *data)
+{
+    if (data->img)
+        mlx_destroy_image(data->mlx_ptr, data->img);
+    data->img = mlx_new_image(data->mlx_ptr, data->img_width, data->img_height);
+    data->img_addr = (int *)mlx_get_data_addr(data->img, &data->bpp, &data->size_l, &data->endian);
+	if (data->img_addr == NULL)
+        handle_error(data, EIO, "Failed to get image address.");
+	return (0);
 }

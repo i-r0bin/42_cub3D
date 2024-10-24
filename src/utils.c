@@ -13,16 +13,14 @@ void	set_param(int *x, int *y, t_data *data)
     *y += data->img_height - data->map_height * MAP_SIZE - 10;
 }
 
-void	print_controls(void)
+char    *line_start(char *line)
 {
-    ft_putendl_fd("Controls:", 1);
-    ft_putendl_fd("Move forward: W", 1);
-    ft_putendl_fd("Move backward: S", 1);
-    ft_putendl_fd("Strafe left: A", 1);
-    ft_putendl_fd("Strafe right: D", 1);
-    ft_putendl_fd("Look left: Left arrow", 1);
-    ft_putendl_fd("Look right: Right arrow", 1);
-    ft_putendl_fd("Exit: ESC", 1);
+    int i;
+
+    i = 0;
+    while (line[i] == ' ')
+        i++;
+    return (line + i);
 }
 
 void	free_matrix(char **matrix)

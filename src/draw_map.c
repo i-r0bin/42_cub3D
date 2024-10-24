@@ -25,7 +25,7 @@ void    draw_point(t_data *data, int x, int y)
     }
 }
 
-void    draw_borders(t_data *data, int x, int y)
+void    draw_floor(t_data *data, int x, int y)
 {
     int i;
     int j;
@@ -42,14 +42,14 @@ void    draw_borders(t_data *data, int x, int y)
             if (i == 0 || i == MAP_SIZE - 1 || j == 0 || j == MAP_SIZE - 1)
                 data->img_addr[(y + i) * data->img_width + (x + j)] = 0x000000; //black
             else
-                data->img_addr[(y + i) * data->img_width + (x + j)] = data->ceiling_color;
+                data->img_addr[(y + i) * data->img_width + (x + j)] = data->floor_color;
             j++;
         }
         i++;
     }
 }
 
-void    draw_floor(t_data *data, int x, int y)
+void    draw_borders(t_data *data, int x, int y)
 {
     int i;
     int j;
@@ -62,7 +62,7 @@ void    draw_floor(t_data *data, int x, int y)
         while (j < MAP_SIZE)
         {
             if (!(x + j > data->img_width || y + i > data->img_height || x < 0 || y < 0))
-                data->img_addr[(y + i) * data->img_width + (x + j)] = data->floor_color;
+                data->img_addr[(y + i) * data->img_width + (x + j)] = data->ceiling_color;
             j++;
         }
         i++;
@@ -82,7 +82,7 @@ void    draw_map(t_data *data)
         {
             if (data->map[y][x] == '1')
                 draw_borders(data, x, y);
-            else
+            else if (data->map[y][x] == '0' || data->map[y][x] == 'N' || data->map[y][x] == 'S' || data->map[y][x] == 'W' || data->map[y][x] == 'E')
                 draw_floor(data, x, y);
             x++;
         }

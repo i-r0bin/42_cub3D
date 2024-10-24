@@ -12,6 +12,7 @@ SRC = \
 	$Smain.c \
 	$Sinit_data.c \
 	$Sparse_args.c \
+	$Sparse_color.c \
 	$Sparse_map.c \
 	$Sdraw_map.c \
 	$Skey_actions.c \

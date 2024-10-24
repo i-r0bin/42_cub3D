@@ -53,7 +53,10 @@ int parse_line(t_data *data, char *line);
 int parse_resolution(t_data *data, char *line);
 int parse_texture(t_data *data, char *line, int i);
 int parse_color(t_data *data, char *line, int i);
+int get_color(char *str);
 int parse_map(t_data *data, char *line);
+int check_elements(t_data *data);
+int handle_error(t_data *data, int err, char *msg);
 int err_msg(char *msg, int err);
 int render(t_data *data);
 int	set_image(t_data *data);
@@ -65,6 +68,7 @@ void    set_zoom(int *x, int *y);
 void    set_param(int *x, int *y, t_data *data);
 void    cub_free(t_data *data);
 void    free_matrix(char **matrix);
+char    *line_start(char *line);
 void    move_player(t_data *data, char dir);
 void    rotate_player(t_data *data, int dir);
 

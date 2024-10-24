@@ -21,7 +21,7 @@ int	key_press(int keycode, t_data *data)
 
 int	cub_exit(t_data *data)
 {
-	cub_free(data);
+    cub_free(data);
     exit(0);
 }
 

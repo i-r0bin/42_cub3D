@@ -1,21 +1,22 @@
 #include "cub3d.h"
 
+void	print_controls(void)
+{
+    ft_putendl_fd("Controls:", 1);
+    ft_putendl_fd("Move forward: W", 1);
+    ft_putendl_fd("Move backward: S", 1);
+    ft_putendl_fd("Strafe left: A", 1);
+    ft_putendl_fd("Strafe right: D", 1);
+    ft_putendl_fd("Look left: Left arrow", 1);
+    ft_putendl_fd("Look right: Right arrow", 1);
+    ft_putendl_fd("Exit: ESC", 1);
+}
+
 void	listen_for_input(t_data *data)
 {
     mlx_hook(data->win_ptr, KeyPress, KeyPressMask, key_press, data);
     mlx_hook(data->win_ptr, DestroyNotify, StructureNotifyMask, cub_exit, data);
     mlx_hook(data->win_ptr, ConfigureNotify, StructureNotifyMask, resize_window, data);
-}
-
-int	set_image(t_data *data)
-{
-    if (data->img)
-        mlx_destroy_image(data->mlx_ptr, data->img);
-    data->img = mlx_new_image(data->mlx_ptr, data->img_width, data->img_height);
-    data->img_addr = (int *)mlx_get_data_addr(data->img, &data->bpp, &data->size_l, &data->endian);
-	if (data->img_addr == NULL)
-		cub_exit(data);
-	return (0);
 }
 
 int render(t_data *data)
@@ -30,17 +31,13 @@ int render(t_data *data)
 int	main(int argc, char **argv)
 {
     t_data data;
-    int err;
 
-	if (argc != 2)
-		return (err_msg("Usage:\t./cub3D <map.cub>\nError", EINVAL));
     init_data(&data);
-    err = parse_args(&data, argv);
-	if (err != 0)
-    {
-        cub_free(&data);
-        return (err);
-    }
+	if (argc == 1)
+        handle_error(&data, EINVAL, "Missing argument. Try:\t./cub3D path/to/map.cub");
+    else if (argc > 2)
+        handle_error(&data, EINVAL, "Too many arguments. Try:\t./cub3D path/to/map.cub");
+    parse_args(&data, argv);
 	init_mlx(&data);
     print_controls();
     listen_for_input(&data);
