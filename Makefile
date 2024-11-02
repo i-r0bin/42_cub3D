@@ -29,13 +29,20 @@ AR = ar rcs
 RM = rm -rf
 RMDIR = rmdir
 
-all:	$(NAME)
+all: $(NAME)
 
 $(LIBFT):
 	make -C $(LIBFT_PATH) all
 
 $(MLX):
+	# Ensure MinilibX is extracted before building
+	@if [ ! -d "$(MLX_PATH)" ]; then \
+		echo "Extracting MinilibX..."; \
+		tar xf minilibx-linux.tgz -C .; \
+	fi
 	make -C $(MLX_PATH) all
+
+
 
 $O:
 	mkdir -p $@
@@ -45,19 +52,22 @@ $(OBJ): | $O
 $O%.o: $S%.c
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-$(NAME): $(LIBFT) $(MLX) $(OBJ)
+$(NAME): $(MLX) $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LIB) $(INC)
 
 clean:
 	make -C $(LIBFT_PATH) clean
 	make -C $(MLX_PATH) clean
 	$(RM) $(OBJ)
-	$(RMDIR) $O
 
 fclean: clean
 	$(RM) $(LIBFT)
 	$(RM) $(NAME)
+	@if [ ! -d "$(MLX_PATH)" ]; then \
+		echo "Deleting MinilibX..."; \
+		rm -rf minilibx-linux.tgz -C .; \
+	fi
 
-re:	fclean all
+re: fclean all
 
-.PHONY:	all clean fclean re
+.PHONY: all clean fclean re extract

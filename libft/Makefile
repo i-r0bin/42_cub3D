@@ -86,7 +86,6 @@ $(NAME): $(OBJ)
 
 clean:
 	$(RM) $(OBJ)
-	$(RMDIR) $O
 
 fclean: clean
 	$(RM) $(NAME)
