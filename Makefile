@@ -17,7 +17,8 @@ SRC = \
 	$Sdraw_map.c \
 	$Skey_actions.c \
 	$Sutils.c \
-	$Serror_handling.c
+	$Serror_handling.c \
+	$Srender_cub.c \
 
 OBJ = $(SRC:$S%.c=$O%.o)
 
@@ -41,8 +42,6 @@ $(MLX):
 		tar xf minilibx-linux.tgz -C .; \
 	fi
 	make -C $(MLX_PATH) all
-
-
 
 $O:
 	mkdir -p $@
@@ -70,4 +69,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re extract
+format:
+	@c_formatter_42 $(S)*.c cub3d.h
+
+.PHONY: all clean fclean re extract format
