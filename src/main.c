@@ -45,7 +45,6 @@ int	main(int argc, char **argv)
 	print_controls();
 	listen_for_input(&data);
 	mlx_loop_hook(data.mlx_ptr, render, &data);
-	render(&data);
 	mlx_loop(data.mlx_ptr);
 	return (0);
 }

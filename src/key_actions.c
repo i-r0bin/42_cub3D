@@ -1,4 +1,5 @@
 #include "cub3d.h"
+#define ROTATE_SPEED 0.05
 
 int	key_press(int keycode, t_data *data)
 {
@@ -48,13 +49,21 @@ void	move_player(t_data *data, char dir)
 		data->player_x -= 1;
 	else if (dir == 'D' && data->map[data->player_y][data->player_x + 1] != '1')
 		data->player_x += 1;
-	draw_map(data);
-	render_cub(data);
 }
-
-void	rotate_player(t_data *data, int dir)
+void rotate_player(t_data *data, int dir)
 {
-	data = data;
-	dir = dir;
-	return ;
+    double old_dir_x = data->dir_x;
+    double old_plane_x = data->plane_x;
+    double rotate_angle = dir * ROTATE_SPEED;
+
+    // Rotate direction vector
+    data->dir_x = data->dir_x * cos(rotate_angle) - data->dir_y * sin(rotate_angle);
+    data->dir_y = old_dir_x * sin(rotate_angle) + data->dir_y * cos(rotate_angle);
+
+    // Rotate camera plane
+    data->plane_x = data->plane_x * cos(rotate_angle) - data->plane_y * sin(rotate_angle);
+    data->plane_y = old_plane_x * sin(rotate_angle) + data->plane_y * cos(rotate_angle);
+
+    printf("Player rotated %s\n", dir > 0 ? "right" : "left");
+    render_cub(data);
 }

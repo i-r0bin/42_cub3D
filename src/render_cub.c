@@ -1,107 +1,120 @@
 #include "cub3d.h"
 #include <math.h>
 
-// Main rendering function using raycasting
 void render_cub(t_data *data)
 {
-    int x;
+    int w = data->img_width;
+    int h = data->img_height;
 
-    // Iterate over each vertical stripe of the screen
-    for (x = 0; x < data->img_width; x++)
+    // Main loop for rendering each vertical stripe
+    for (int x = 0; x < w; x++)
     {
-        // Calculate the camera's X-coordinate for the current vertical stripe
-        double camera_x = 2 * x / (double)data->img_width - 1;
-        double ray_dir_x = data->dir_x + data->plane_x * camera_x;
-        double ray_dir_y = data->dir_y + data->plane_y * camera_x;
+        // Calculate ray position and direction
+        double cameraX = 2 * x / (double)w - 1; // x-coordinate in camera space
+        double rayDirX = data->dir_x + data->plane_x * cameraX;
+        double rayDirY = data->dir_y + data->plane_y * cameraX;
 
-        // Initialize ray position and map grid coordinates
-        int map_x = (int)data->player_x;
-        int map_y = (int)data->player_y;
+        // Initial map square and ray distances
+        int mapX = (int)data->player_x;
+        int mapY = (int)data->player_y;
+        double sideDistX, sideDistY;
 
-        // Length of ray from current position to next x or y-side
-        double side_dist_x;
-        double side_dist_y;
+        // Calculate delta distances
+        double deltaDistX = (rayDirX == 0) ? 1e30 : fabs(1 / rayDirX);
+        double deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
+        double perpWallDist;
 
-        // Length of ray from one x or y-side to the next
-        double delta_dist_x = fabs(1 / ray_dir_x);
-        double delta_dist_y = fabs(1 / ray_dir_y);
-        double perp_wall_dist;
-
-        // Direction to move in x and y (+1 or -1)
-        int step_x;
-        int step_y;
-        int hit = 0; // Was a wall hit?
-        int side; // Was a NS or EW wall hit?
+        // Step direction and initial side distances
+        int stepX, stepY;
+        int hit = 0; // Was there a wall hit?
+        int side; // Was a NS or an EW wall hit?
 
         // Calculate step and initial sideDist
-        if (ray_dir_x < 0)
+        if (rayDirX < 0)
         {
-            step_x = -1;
-            side_dist_x = (data->player_x - map_x) * delta_dist_x;
+            stepX = -1;
+            sideDistX = (data->player_x - mapX) * deltaDistX;
         }
         else
         {
-            step_x = 1;
-            side_dist_x = (map_x + 1.0 - data->player_x) * delta_dist_x;
+            stepX = 1;
+            sideDistX = (mapX + 1.0 - data->player_x) * deltaDistX;
         }
-        if (ray_dir_y < 0)
+        if (rayDirY < 0)
         {
-            step_y = -1;
-            side_dist_y = (data->player_y - map_y) * delta_dist_y;
+            stepY = -1;
+            sideDistY = (data->player_y - mapY) * deltaDistY;
         }
         else
         {
-            step_y = 1;
-            side_dist_y = (map_y + 1.0 - data->player_y) * delta_dist_y;
+            stepY = 1;
+            sideDistY = (mapY + 1.0 - data->player_y) * deltaDistY;
         }
 
-        // Perform DDA (Digital Differential Analysis)
+        // Perform DDA
         while (hit == 0)
         {
-            // Jump to the next map square in x or y direction
-            if (side_dist_x < side_dist_y)
+            // Jump to the next map square, either in x-direction, or y-direction
+            if (sideDistX < sideDistY)
             {
-                side_dist_x += delta_dist_x;
-                map_x += step_x;
+                sideDistX += deltaDistX;
+                mapX += stepX;
                 side = 0;
             }
             else
             {
-                side_dist_y += delta_dist_y;
-                map_y += step_y;
+                sideDistY += deltaDistY;
+                mapY += stepY;
                 side = 1;
             }
-            // Check if the ray has hit a wall
-            if (data->map[map_y][map_x] == '1')
+            // Check if ray has hit a wall
+            if (data->map[mapY][mapX] == '1')
                 hit = 1;
         }
 
-        // Calculate distance to the point of impact
+        // Calculate the perpendicular distance to the wall
         if (side == 0)
-            perp_wall_dist = (map_x - data->player_x + (1 - step_x) / 2) / ray_dir_x;
+            perpWallDist = (sideDistX - deltaDistX);
         else
-            perp_wall_dist = (map_y - data->player_y + (1 - step_y) / 2) / ray_dir_y;
+            perpWallDist = (sideDistY - deltaDistY);
 
-        // Calculate the height of the line to draw on the screen
-        int line_height = (int)(data->img_height / perp_wall_dist);
+        // Calculate height of line to draw on screen
+        int lineHeight = (int)(h / perpWallDist);
 
-        // Calculate the lowest and highest pixel to fill in the current stripe
-        int draw_start = -line_height / 2 + data->img_height / 2;
-        if (draw_start < 0) draw_start = 0;
-        int draw_end = line_height / 2 + data->img_height / 2;
-        if (draw_end >= data->img_height) draw_end = data->img_height - 1;
+        // Calculate lowest and highest pixel to fill in the current stripe
+        int pitch = 100;
+        int drawStart = -lineHeight / 2 + h / 2 + pitch;
+        if (drawStart < 0) drawStart = 0;
+        int drawEnd = lineHeight / 2 + h / 2 + pitch;
+        if (drawEnd >= h) drawEnd = h - 1;
 
-        // Choose wall color based on the side
-        int wall_color;
-        if (side == 0)
-            wall_color = 0xFF0000; // Red for NS walls
-        else
-            wall_color = 0x00FF00; // Green for EW walls
+        // Texturing calculations
+        int texNum = data->map[mapY][mapX] - '1'; // Convert map value to texture index
+        double wallX; // Exact position of wall hit
+        if (side == 0) wallX = data->player_y + perpWallDist * rayDirY;
+        else           wallX = data->player_x + perpWallDist * rayDirX;
+        wallX -= floor(wallX);
 
-        // Draw the vertical line representing the wall
-        for (int y = draw_start; y < draw_end; y++)
+        // X coordinate on the texture
+        int texX = (int)(wallX * (double)TEXTURE_SIZE);
+        if (side == 0 && rayDirX > 0) texX = TEXTURE_SIZE - texX - 1;
+        if (side == 1 && rayDirY < 0) texX = TEXTURE_SIZE - texX - 1;
+
+        // Step size and starting texture position
+        double step = 1.0 * TEXTURE_SIZE / lineHeight;
+        double texPos = (drawStart - pitch - h / 2 + lineHeight / 2) * step;
+
+        // Draw the pixels of the stripe
+        for (int y = drawStart; y < drawEnd; y++)
         {
-            data->img_addr[y * data->img_width + x] = wall_color;
+            int texY = (int)texPos & (TEXTURE_SIZE - 1);
+            texPos += step;
+
+            // Fetch the color from the texture array
+            unsigned int color = data->wall_textures[texNum][TEXTURE_SIZE * texY + texX];
+            // Make color darker for y-sides (simulate shading)
+            if (side == 1) color = (color >> 1) & 0x7F7F7F;
+            data->img_addr[y * w + x] = color;
         }
     }
 }

@@ -14,6 +14,15 @@
 # define TILE_SIZE 64
 # define TEXTURE_SIZE 64
 
+typedef struct textures
+{
+	char *north;
+	char *south;
+	char *west;
+	char *east;
+}        t_textures;
+ 
+
 typedef struct s_data
 {
 	void	*mlx_ptr;
