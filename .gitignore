@@ -2,3 +2,4 @@ cub3d
 *.o
 libft/libft.a
 .vscode
+minilibx-linux
