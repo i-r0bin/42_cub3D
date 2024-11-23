@@ -1,11 +1,5 @@
 #include "cub3d.h"
 
-void	set_zoom(int *x, int *y)
-{
-	*x *= MAP_SIZE;
-	*y *= MAP_SIZE;
-}
-
 char	*line_start(char *line)
 {
 	int	i;
@@ -14,6 +8,33 @@ char	*line_start(char *line)
 	while (line[i] == ' ')
 		i++;
 	return (line + i);
+}
+
+int	is_texture(char *line)
+{
+	if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0
+		|| ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0)
+		return (1);
+	return (0);
+}
+
+void	cub_free(t_data *data)
+{
+	free_texture(&data->north_texture);
+	free_texture(&data->south_texture);
+	free_texture(&data->west_texture);
+	free_texture(&data->east_texture);
+	if (data->map.map)
+		free_matrix(data->map.map);
+	if (data->mlx.img)
+		mlx_destroy_image(data->mlx.mlx_ptr, data->mlx.img);
+	if (data->mlx.win_ptr)
+		mlx_destroy_window(data->mlx.mlx_ptr, data->mlx.win_ptr);
+	if (data->mlx.mlx_ptr)
+	{
+		mlx_destroy_display(data->mlx.mlx_ptr);
+		free(data->mlx.mlx_ptr);
+	}
 }
 
 void	free_matrix(char **matrix)
@@ -26,19 +47,19 @@ void	free_matrix(char **matrix)
 	free(matrix);
 }
 
-void	cub_free(t_data *data)
+void	free_texture(t_texture *texture)
 {
-	if (data->wall_textures)
-		free_matrix(data->wall_textures);
-	if (data->map)
-		free_matrix(data->map);
-	if (data->img)
-		mlx_destroy_image(data->mlx_ptr, data->img);
-	if (data->win_ptr)
-		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-	if (data->mlx_ptr)
+	int	i;
+
+	i = 0;
+	if (texture->path)
+		free(texture->path);
+	if (texture->color_table)
 	{
-		mlx_destroy_display(data->mlx_ptr);
-		free(data->mlx_ptr);
+		while (i < texture->colors_num)
+			free(texture->color_table[i++].symbol);
+		free(texture->color_table);
 	}
+	if (texture->color_matrix)
+		free(texture->color_matrix);
 }

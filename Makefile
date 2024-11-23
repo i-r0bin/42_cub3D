@@ -11,14 +11,17 @@ INC = -I$I -I$(LIBFT_PATH) -I$(MLX_PATH)
 SRC = \
 	$Smain.c \
 	$Sinit_data.c \
-	$Sparse_args.c \
-	$Sparse_color.c \
-	$Sparse_map.c \
-	$Sdraw_map.c \
 	$Skey_actions.c \
-	$Sutils.c \
-	$Serror_handling.c \
+	$Sparse_args.c \
+	$Sparse_map.c \
+	$Sparse_texture.c \
+	$Scolor.c \
+	$Scolor_utils.c \
+	$Sdraw_map.c \
 	$Srender_cub.c \
+	$Sutils.c \
+	$Svalidate_data.c \
+	$Serror_handling.c \
 
 OBJ = $(SRC:$S%.c=$O%.o)
 
@@ -58,6 +61,7 @@ clean:
 	make -C $(LIBFT_PATH) clean
 	make -C $(MLX_PATH) clean
 	$(RM) $(OBJ)
+	if [ -d $O ]; then $(RMDIR) $O; fi
 
 fclean: clean
 	$(RM) $(LIBFT)

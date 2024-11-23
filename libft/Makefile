@@ -86,6 +86,7 @@ $(NAME): $(OBJ)
 
 clean:
 	$(RM) $(OBJ)
+	if [ -d $O ]; then $(RMDIR) $O; fi
 
 fclean: clean
 	$(RM) $(NAME)

@@ -33,37 +33,45 @@ int	resize_window(t_data *data, XEvent *event)
 	if (event->type == ConfigureNotify)
 	{
 		xce = event->xconfigure;
-		data->img_width = xce.width;
-		data->img_height = xce.height;
+		data->mlx.img_width = xce.width;
+		data->mlx.img_height = xce.height;
 	}
 	return (0);
 }
 
 void	move_player(t_data *data, char dir)
 {
-	if (dir == 'W' && data->map[data->player_y - 1][data->player_x] != '1')
-		data->player_y -= 1;
-	else if (dir == 'S' && data->map[data->player_y + 1][data->player_x] != '1')
-		data->player_y += 1;
-	else if (dir == 'A' && data->map[data->player_y][data->player_x - 1] != '1')
-		data->player_x -= 1;
-	else if (dir == 'D' && data->map[data->player_y][data->player_x + 1] != '1')
-		data->player_x += 1;
+	if (dir == 'W' && data->map.map[data->player.y - 1][data->player.x] != '1')
+		data->player.y -= 1;
+	else if (dir == 'S' && data->map.map[data->player.y
+			+ 1][data->player.x] != '1')
+		data->player.y += 1;
+	else if (dir == 'A' && data->map.map[data->player.y][data->player.x
+			- 1] != '1')
+		data->player.x -= 1;
+	else if (dir == 'D' && data->map.map[data->player.y][data->player.x
+			+ 1] != '1')
+		data->player.x += 1;
 }
-void rotate_player(t_data *data, int dir)
+
+void	rotate_player(t_data *data, int dir)
 {
-    double old_dir_x = data->dir_x;
-    double old_plane_x = data->plane_x;
-    double rotate_angle = dir * ROTATE_SPEED;
+	double old_dir_x = data->player.dir_x;
+	double old_plane_x = data->player.plane_x;
+	double rotate_angle = dir * ROTATE_SPEED;
 
-    // Rotate direction vector
-    data->dir_x = data->dir_x * cos(rotate_angle) - data->dir_y * sin(rotate_angle);
-    data->dir_y = old_dir_x * sin(rotate_angle) + data->dir_y * cos(rotate_angle);
+	// Rotate direction vector
+	data->player.dir_x = data->player.dir_x * cos(rotate_angle)
+		- data->player.dir_y * sin(rotate_angle);
+	data->player.dir_y = old_dir_x * sin(rotate_angle) + data->player.dir_y
+		* cos(rotate_angle);
 
-    // Rotate camera plane
-    data->plane_x = data->plane_x * cos(rotate_angle) - data->plane_y * sin(rotate_angle);
-    data->plane_y = old_plane_x * sin(rotate_angle) + data->plane_y * cos(rotate_angle);
+	// Rotate camera plane
+	data->player.plane_x = data->player.plane_x * cos(rotate_angle)
+		- data->player.plane_y * sin(rotate_angle);
+	data->player.plane_y = old_plane_x * sin(rotate_angle)
+		+ data->player.plane_y * cos(rotate_angle);
 
-    printf("Player rotated %s\n", dir > 0 ? "right" : "left");
-    render_cub(data);
+	printf("Player rotated %s\n", dir > 0 ? "right" : "left");
+	render_cub(data);
 }
