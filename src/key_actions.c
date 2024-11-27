@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_actions.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/27 02:59:54 by ppezzull          #+#    #+#             */
+/*   Updated: 2024/11/27 02:59:59 by ppezzull         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 #define ROTATE_SPEED 0.05
 
@@ -44,13 +56,13 @@ void	move_player(t_data *data, char dir)
 	if (dir == 'W' && data->map.map[data->player.y - 1][data->player.x] != '1')
 		data->player.y -= 1;
 	else if (dir == 'S' && data->map.map[data->player.y
-			+ 1][data->player.x] != '1')
+		+ 1][data->player.x] != '1')
 		data->player.y += 1;
 	else if (dir == 'A' && data->map.map[data->player.y][data->player.x
-			- 1] != '1')
+		- 1] != '1')
 		data->player.x -= 1;
 	else if (dir == 'D' && data->map.map[data->player.y][data->player.x
-			+ 1] != '1')
+		+ 1] != '1')
 		data->player.x += 1;
 }
 

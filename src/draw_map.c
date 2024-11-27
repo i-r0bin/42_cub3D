@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_map.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/27 02:59:38 by ppezzull          #+#    #+#             */
+/*   Updated: 2024/11/27 02:59:41 by ppezzull         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	set_zoom(int *x, int *y)
@@ -20,8 +32,8 @@ void	draw_map(t_data *data)
 			if (data->map.map[y][x] == '1')
 				draw_borders(data, x, y);
 			else if (data->map.map[y][x] == '0' || data->map.map[y][x] == 'N'
-					|| data->map.map[y][x] == 'S' || data->map.map[y][x] == 'W'
-					|| data->map.map[y][x] == 'E')
+				|| data->map.map[y][x] == 'S' || data->map.map[y][x] == 'W'
+				|| data->map.map[y][x] == 'E')
 				draw_floor(data, x, y);
 			x++;
 		}

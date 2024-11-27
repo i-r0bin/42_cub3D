@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/27 03:00:06 by ppezzull          #+#    #+#             */
+/*   Updated: 2024/11/27 03:00:08 by ppezzull         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	print_controls(void)
@@ -16,9 +28,9 @@ void	listen_for_input(t_data *data)
 {
 	mlx_hook(data->mlx.win_ptr, KeyPress, KeyPressMask, key_press, data);
 	mlx_hook(data->mlx.win_ptr, DestroyNotify, StructureNotifyMask, cub_exit,
-			data);
+		data);
 	mlx_hook(data->mlx.win_ptr, ConfigureNotify, StructureNotifyMask,
-			resize_window, data);
+		resize_window, data);
 }
 
 int	render(t_data *data)
@@ -27,7 +39,7 @@ int	render(t_data *data)
 	render_cub(data);
 	draw_map(data);
 	mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img,
-			0, 0);
+		0, 0);
 	return (0);
 }
 
@@ -38,10 +50,10 @@ int	main(int argc, char **argv)
 	init_data(&data);
 	if (argc == 1)
 		handle_error(&data, EINVAL,
-				"Missing argument. Try:\t./cub3D path/to/map.cub");
+			"Missing argument. Try:\t./cub3D path/to/map.cub");
 	else if (argc > 2)
 		handle_error(&data, EINVAL,
-				"Too many arguments. Try:\t./cub3D path/to/map.cub");
+			"Too many arguments. Try:\t./cub3D path/to/map.cub");
 	parse_args(&data, argv);
 	init_mlx(&data);
 	print_controls();

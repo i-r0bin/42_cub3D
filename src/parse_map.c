@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_map.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/27 03:00:20 by ppezzull          #+#    #+#             */
+/*   Updated: 2024/11/27 03:00:23 by ppezzull         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int	parse_map(t_data *data, char *line)
@@ -31,7 +43,7 @@ int	parse_map(t_data *data, char *line)
 		{
 			if (data->starting_dir != '0')
 				handle_error(data, ENOEXEC,
-						"Invalid map.\tMultiple player positions found.");
+					"Invalid map.\tMultiple player positions found.");
 			data->player.x = j;
 			data->player.y = i;
 			data->starting_dir = line[j];

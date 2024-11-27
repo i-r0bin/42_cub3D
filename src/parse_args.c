@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_args.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/27 03:00:13 by ppezzull          #+#    #+#             */
+/*   Updated: 2024/11/27 03:00:16 by ppezzull         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int	parse_args(t_data *data, char **av)
@@ -9,7 +21,7 @@ int	parse_args(t_data *data, char **av)
 	if (!format || ft_strlen(format) != 4 || ft_strncmp(ft_strrchr(av[1], '.'),
 			".cub", 4) != 0)
 		handle_error(data, EINVAL,
-				"Invalid file format. Only .cub files are accepted.");
+			"Invalid file format. Only .cub files are accepted.");
 	fd = open(av[1], O_RDONLY);
 	if (fd == -1)
 		handle_error(data, errno, "Failed to open file.");
@@ -78,7 +90,7 @@ int	save_texture_path(t_data *data, char *line)
 		data->east_texture.path = ft_strdup(tmp);
 	else
 		handle_error(data, ENOEXEC,
-				"Invalid texture.\tMultiple textures found.");
+			"Invalid texture.\tMultiple textures found.");
 	free(tmp);
 	return (0);
 }
@@ -89,10 +101,10 @@ int	parse_color(t_data *data, char *line, int i)
 
 	if (i == 0 && data->floor_color != -1)
 		handle_error(data, ENOEXEC,
-				"Invalid color.\tMultiple floor colors found.");
+			"Invalid color.\tMultiple floor colors found.");
 	else if (i == 1 && data->ceiling_color != -1)
 		handle_error(data, ENOEXEC,
-				"Invalid color.\tMultiple ceiling colors found.");
+			"Invalid color.\tMultiple ceiling colors found.");
 	rgb = get_color_from_rgb_str(line + 1);
 	if (rgb == -1)
 		handle_error(data, ENOEXEC, "Invalid color.");

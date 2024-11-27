@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validate_data.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/27 03:00:50 by ppezzull          #+#    #+#             */
+/*   Updated: 2024/11/27 03:00:52 by ppezzull         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int	check_elements(t_data *data)
@@ -19,19 +31,19 @@ int	check_textures(t_data *data)
 	if (data->north_texture.path == NULL || data->south_texture.path == NULL
 		|| data->west_texture.path == NULL || data->east_texture.path == NULL)
 		handle_error(data, ENOEXEC,
-				"Invalid map.\tMissing texture before map.");
+			"Invalid map.\tMissing texture before map.");
 	if (check_texture_format(data->north_texture.path) == 1)
 		handle_error(data, ENOEXEC,
-				"Invalid texture.\tTexture format not supported.");
+			"Invalid texture.\tTexture format not supported.");
 	if (check_texture_format(data->south_texture.path) == 1)
 		handle_error(data, ENOEXEC,
-				"Invalid texture.\tTexture format not supported.");
+			"Invalid texture.\tTexture format not supported.");
 	if (check_texture_format(data->west_texture.path) == 1)
 		handle_error(data, ENOEXEC,
-				"Invalid texture.\tTexture format not supported.");
+			"Invalid texture.\tTexture format not supported.");
 	if (check_texture_format(data->east_texture.path) == 1)
 		handle_error(data, ENOEXEC,
-				"Invalid texture.\tTexture format not supported.");
+			"Invalid texture.\tTexture format not supported.");
 	return (0);
 }
 
