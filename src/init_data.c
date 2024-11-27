@@ -31,12 +31,10 @@ void	init_data(t_data *data)
 	init_textures(data);
 	data->floor_color = -1;
 	data->ceiling_color = -1;
-	data->player.dir_x = 1.0; // Example value, adjust as needed
+	data->player.dir_x = 1.0;
 	data->player.dir_y = 0.0;
-	// Set the camera plane for a field of view of 66 degrees:
 	data->player.plane_x = 0.0;
 	data->player.plane_y = 0.66;
-	// Adjust as needed for horizontal or vertical FOV
 }
 
 void	init_mlx(t_data *data)
@@ -75,7 +73,7 @@ void	init_textures(t_data *data)
 
 int	set_image(t_data *data)
 {
-	t_mlx *mlx;
+	t_mlx	*mlx;
 
 	mlx = &data->mlx;
 	if (mlx->img)

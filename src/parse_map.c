@@ -12,13 +12,11 @@
 
 #include "cub3d.h"
 
-int	parse_map(t_data *data, char *line)
+void	update_map(t_data *data, char *line)
 {
 	int		i;
-	int		j;
 	char	**new_map;
 
-	check_elements(data);
 	i = 0;
 	while (data->map.map && data->map.map[i] != NULL)
 		i++;
@@ -35,6 +33,12 @@ int	parse_map(t_data *data, char *line)
 		free(data->map.map);
 	data->map.map = new_map;
 	data->map.height++;
+}
+
+void	set_player_position(t_data *data, char *line, int i)
+{
+	int	j;
+
 	j = 0;
 	while (line[j] != '\0' && line[j] != '\n')
 	{
@@ -50,6 +54,16 @@ int	parse_map(t_data *data, char *line)
 		}
 		j++;
 	}
-	data->map.width = (j > data->map.width) ? j : data->map.width;
+	if (j > data->map.width)
+	{
+		data->map.width = j;
+	}
+}
+
+int	parse_map(t_data *data, char *line)
+{
+	check_elements(data);
+	update_map(data, line);
+	set_player_position(data, line, data->map.height - 1);
 	return (0);
 }

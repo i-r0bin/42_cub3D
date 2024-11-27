@@ -54,7 +54,7 @@ unsigned int	ft_atoi_hex(char *str)
 		value = hex_char_to_int(*str);
 		if (value == -1)
 			break ;
-		res = (res << 4) | value; // res = res * 16 + value
+		res = (res << 4) | value;
 		str++;
 	}
 	return (res);

@@ -40,10 +40,8 @@ $(LIBFT):
 
 $(MLX):
 	# Ensure MinilibX is extracted before building
-	@if [ ! -d "$(MLX_PATH)" ]; then \
-		echo "Extracting MinilibX..."; \
-		tar xf minilibx-linux.tgz -C .; \
-	fi
+	echo "Extracting MinilibX..."; \
+	tar xf minilibx-linux.tgz -C .; \
 	make -C $(MLX_PATH) all
 
 $O:
@@ -66,10 +64,8 @@ clean:
 fclean: clean
 	$(RM) $(LIBFT)
 	$(RM) $(NAME)
-	@if [ ! -d "$(MLX_PATH)" ]; then \
-		echo "Deleting MinilibX..."; \
-		rm -rf minilibx-linux.tgz -C .; \
-	fi
+	echo "Deleting MinilibX..."; \
+	rm -rf minilibx-linux.tgz -C .; \
 
 re: fclean all
 

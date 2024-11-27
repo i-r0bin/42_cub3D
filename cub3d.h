@@ -25,6 +25,7 @@
 # define MAP_SIZE 10
 # define TILE_SIZE 64
 # define TEXTURE_SIZE 64
+# define ROTATE_SPEED 0.05
 
 typedef struct s_color_table_entry
 {
@@ -163,6 +164,11 @@ void					free_matrix(char **matrix);
 void					free_texture(t_texture *texture);
 char					**ft_strtrim_split_args(char **strs, char *set);
 int						ft_isdigit_split_args(char **strs);
+
+// free data
+void					cub_free(t_data *data);
+void					free_texture(t_texture *texture);
+void					free_matrix(char **matrix);
 
 // error handling
 int						handle_error(t_data *data, int err, char *msg);

@@ -100,8 +100,8 @@ void	draw_point(t_data *data, int x, int y)
 	int	dy;
 
 	set_zoom(&x, &y);
-	i = 0;
-	while (i < MAP_SIZE)
+	i = -1;
+	while (++i < MAP_SIZE)
 	{
 		j = 0;
 		while (j < MAP_SIZE)
@@ -117,6 +117,5 @@ void	draw_point(t_data *data, int x, int y)
 						+ j)] = 0xff0000;
 			j++;
 		}
-		i++;
 	}
 }

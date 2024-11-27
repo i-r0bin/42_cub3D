@@ -25,7 +25,7 @@ void	render_cub(t_data *data)
 	double			deltaDistX;
 	double			deltaDistY;
 	int				hit;
-		int side;
+	int				side;
 	double			perpWallDist;
 	int				lineHeight;
 	int				drawStart;
