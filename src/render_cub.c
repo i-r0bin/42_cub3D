@@ -10,143 +10,108 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-#include <math.h>
+#include "cub3d.h" // Include necessary headers and declarations
 
-void	render_cub(t_data *data)
+void	init_raycast(t_raycast *raycast, t_data *data, int x, int w)
 {
-	int				w;
-	int				h;
-	double			cameraX;
-	double			rayDirX;
-	double			rayDirY;
-	int				mapX;
-	int				mapY;
-	double			deltaDistX;
-	double			deltaDistY;
-	int				hit;
-		int side;
-	double			perpWallDist;
-	int				lineHeight;
-	int				drawStart;
-	int				drawEnd;
-	double			wallX;
-	int				texX;
-	double			step;
-	double			texPos;
-	int				texY;
-	int				texNum;
-	unsigned int	color;
+	raycast->cameraX = 2 * x / (double)w - 1;
+	raycast->rayDirX = data->player.dir_x + data->player.plane_x
+		* raycast->cameraX;
+	raycast->rayDirY = data->player.dir_y + data->player.plane_y
+		* raycast->cameraX;
+	raycast->mapX = (int)data->player.x;
+	raycast->mapY = (int)data->player.y;
+	raycast->deltaDistX = fabs(1 / raycast->rayDirX);
+	raycast->deltaDistY = fabs(1 / raycast->rayDirY);
+	raycast->hit = 0;
+}
 
-	w = data->mlx.img_width;
-	h = data->mlx.img_height;
-	// Draw floor and ceiling
-	for (int y = 0; y < h; y++)
+void	calculate_step_and_side(t_raycast *raycast, t_data *data)
+{
+	if (raycast->rayDirX < 0)
 	{
-		for (int x = 0; x < w; x++)
-		{
-			if (y < h / 2)
-				data->mlx.img_addr[y * w + x] = data->ceiling_color; // Ceiling
-			else
-				data->mlx.img_addr[y * w + x] = data->floor_color; // Floor
-		}
+		raycast->stepX = -1;
+		raycast->sideDistX = (data->player.x - raycast->mapX)
+			* raycast->deltaDistX;
 	}
-	// Render walls
-	for (int x = 0; x < w; x++)
+	else
 	{
-		cameraX = 2 * x / (double)w - 1;
-		rayDirX = data->player.dir_x + data->player.plane_x * cameraX;
-		rayDirY = data->player.dir_y + data->player.plane_y * cameraX;
-		mapX = (int)data->player.x;
-		mapY = (int)data->player.y;
-		deltaDistX = fabs(1 / rayDirX);
-		deltaDistY = fabs(1 / rayDirY);
-		double sideDistX, sideDistY;
-		int stepX, stepY;
-		hit = 0;
-		if (rayDirX < 0)
+		raycast->stepX = 1;
+		raycast->sideDistX = (raycast->mapX + 1.0 - data->player.x)
+			* raycast->deltaDistX;
+	}
+	if (raycast->rayDirY < 0)
+	{
+		raycast->stepY = -1;
+		raycast->sideDistY = (data->player.y - raycast->mapY)
+			* raycast->deltaDistY;
+	}
+	else
+	{
+		raycast->stepY = 1;
+		raycast->sideDistY = (raycast->mapY + 1.0 - data->player.y)
+			* raycast->deltaDistY;
+	}
+}
+
+void	perform_dda(t_raycast *raycast, t_data *data)
+{
+	while (!raycast->hit)
+	{
+		if (raycast->sideDistX < raycast->sideDistY)
 		{
-			stepX = -1;
-			sideDistX = (data->player.x - mapX) * deltaDistX;
+			raycast->sideDistX += raycast->deltaDistX;
+			raycast->mapX += raycast->stepX;
+			raycast->side = 0;
 		}
 		else
 		{
-			stepX = 1;
-			sideDistX = (mapX + 1.0 - data->player.x) * deltaDistX;
+			raycast->sideDistY += raycast->deltaDistY;
+			raycast->mapY += raycast->stepY;
+			raycast->side = 1;
 		}
-		if (rayDirY < 0)
+		if (data->map.map[raycast->mapY][raycast->mapX] == '1')
 		{
-			stepY = -1;
-			sideDistY = (data->player.y - mapY) * deltaDistY;
-		}
-		else
-		{
-			stepY = 1;
-			sideDistY = (mapY + 1.0 - data->player.y) * deltaDistY;
-		}
-		while (!hit)
-		{
-			if (sideDistX < sideDistY)
-			{
-				sideDistX += deltaDistX;
-				mapX += stepX;
-				side = 0;
-			}
-			else
-			{
-				sideDistY += deltaDistY;
-				mapY += stepY;
-				side = 1;
-			}
-			if (data->map.map[mapY][mapX] == '1')
-				hit = 1;
-		}
-		perpWallDist = (side == 0) ? (mapX - data->player.x + (1 - stepX) / 2)
-			/ rayDirX : (mapY - data->player.y + (1 - stepY) / 2) / rayDirY;
-		lineHeight = (int)(h / perpWallDist);
-		drawStart = -lineHeight / 2 + h / 2;
-		drawEnd = lineHeight / 2 + h / 2;
-		if (drawStart < 0)
-			drawStart = 0;
-		if (drawEnd >= h)
-			drawEnd = h - 1;
-		wallX = (side == 0) ? data->player.y + perpWallDist
-			* rayDirY : data->player.x + perpWallDist * rayDirX;
-		wallX -= floor(wallX);
-		texX = (int)(wallX * (double)TEXTURE_SIZE);
-		if (side == 0 && rayDirX > 0)
-			texX = TEXTURE_SIZE - texX - 1;
-		if (side == 1 && rayDirY < 0)
-			texX = TEXTURE_SIZE - texX - 1;
-		step = 1.0 * TEXTURE_SIZE / lineHeight;
-		texPos = (drawStart - h / 2 + lineHeight / 2) * step;
-		for (int y = drawStart; y < drawEnd; y++)
-		{
-			texY = (int)texPos & (TEXTURE_SIZE - 1);
-			texPos += step;
-			texNum = data->map.map[mapY][mapX] - '1';
-			color = get_color_from_texture(data, texNum, texX, texY);
-			if (side == 1)
-				color = (color >> 1) & 0x7F7F7F; // Darken for shading
-			data->mlx.img_addr[y * w + x] = color;
+			raycast->hit = 1;
 		}
 	}
 }
 
-unsigned int	get_color_from_texture(t_data *data, int texNum, int texX,
-		int texY)
+void	render_wall_columns(t_data *data, int w, int h)
 {
-	unsigned int	color;
+	int			x;
+	t_raycast	raycast;
 
-	if (texNum == 0)
-		color = data->north_texture.color_matrix[texY][texX];
-	else if (texNum == 1)
-		color = data->south_texture.color_matrix[texY][texX];
-	else if (texNum == 2)
-		color = data->west_texture.color_matrix[texY][texX];
-	else if (texNum == 3)
-		color = data->east_texture.color_matrix[texY][texX];
-	else
-		color = 0x00FF00;
-	return (color);
+	x = 0;
+	while (x < w)
+	{
+		init_raycast(&raycast, data, x, w);
+		calculate_step_and_side(&raycast, data);
+		perform_dda(&raycast, data);
+		calculate_wall_params(&raycast, data, h);
+		if (raycast.side == 0)
+		{
+			raycast.wallX = data->player.y + raycast.perpWallDist
+				* raycast.rayDirY;
+		}
+		else
+		{
+			raycast.wallX = data->player.x + raycast.perpWallDist
+				* raycast.rayDirX;
+		}
+		calculate_texture_params(&raycast, h);
+		render_column(data, &raycast, w, x);
+		x++;
+	}
+}
+
+void	render_cub(t_data *data)
+{
+	int	w;
+	int	h;
+
+	w = data->mlx.img_width;
+	h = data->mlx.img_height;
+	fill_ceiling_and_floor(data, w, h);
+	render_wall_columns(data, w, h);
 }

@@ -22,6 +22,7 @@ SRC = \
 	$Sutils.c \
 	$Svalidate_data.c \
 	$Serror_handling.c \
+	$Srender_utils.c \
 
 OBJ = $(SRC:$S%.c=$O%.o)
 

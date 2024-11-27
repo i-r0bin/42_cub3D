@@ -62,6 +62,34 @@ typedef struct s_map
 	int					height;
 }						t_map;
 
+typedef struct s_raycast
+{
+	double				cameraX;
+	double				rayDirX;
+	double				rayDirY;
+	int					mapX;
+	int					mapY;
+	double				deltaDistX;
+	double				deltaDistY;
+	double				sideDistX;
+	double				sideDistY;
+	int					stepX;
+	int					stepY;
+	int					hit;
+	int					side;
+	double				perpWallDist;
+	int					lineHeight;
+	int					drawStart;
+	int					drawEnd;
+	double				wallX;
+	int					texX;
+	double				step;
+	double				texPos;
+	int					texY;
+	int					texNum;
+	unsigned int		color;
+}						t_raycast;
+
 typedef struct s_mlx
 {
 	void				*mlx_ptr;
@@ -144,7 +172,19 @@ void					draw_floor(t_data *data, int x, int y);
 void					draw_point(t_data *data, int x, int y);
 
 // raycasting
+void					init_raycast(t_raycast *raycast, t_data *data, int x,
+							int w);
+void					calculate_step_and_side(t_raycast *raycast,
+							t_data *data);
+void					perform_dda(t_raycast *raycast, t_data *data);
+void					render_wall_columns(t_data *data, int w, int h);
 void					render_cub(t_data *data);
+void					calculate_wall_params(t_raycast *raycast, t_data *data,
+							int h);
+void					fill_ceiling_and_floor(t_data *data, int w, int h);
+void					calculate_texture_params(t_raycast *raycast, int h);
+void					render_column(t_data *data, t_raycast *raycast, int w,
+							int x);
 unsigned int			get_color_from_texture(t_data *data, int texNum,
 							int texX, int texY);
 
