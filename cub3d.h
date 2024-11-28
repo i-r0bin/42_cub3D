@@ -46,14 +46,14 @@ typedef struct s_texture
 
 typedef struct s_player
 {
-	int x;            // Player's x position
-	int y;            // Player's y position
-	double dir_x;     // Player's direction vector X
-	double dir_y;     // Player's direction vector Y
-	double plane_x;   // Camera plane vector X
-	double plane_y;   // Camera plane vector Y
-	double speed;     // Player's movement speed
-	double rot_speed; // Player's rotation speed
+	int					x;
+	int					y;
+	double				dir_x;
+	double				dir_y;
+	double				plane_x;
+	double				plane_y;
+	double				speed;
+	double				rot_speed;
 }						t_player;
 
 typedef struct s_map
@@ -65,9 +65,9 @@ typedef struct s_map
 
 typedef struct s_raycast
 {
-	double				cameraX;
-	double				rayDirX;
-	double				rayDirY;
+	double				camera_x;
+	double				ray_x;
+	double				ray_y;
 	int					mapX;
 	int					mapY;
 	double				deltaDistX;
@@ -103,7 +103,7 @@ typedef struct s_mlx
 	// bits per pixel (number of bits used to store one pixel color)
 	int					size_l;
 	// size line (number of bytes used to store one line of the image in memory)
-	int endian; // endian value (0 or 1) for the image data addr
+	int					endian;
 }						t_mlx;
 
 typedef struct s_data

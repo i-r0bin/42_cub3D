@@ -17,12 +17,12 @@ void	calculate_wall_params(t_raycast *raycast, t_data *data, int h)
 	if (raycast->side == 0)
 	{
 		raycast->perpWallDist = (raycast->mapX - data->player.x + (1
-					- raycast->stepX) / 2) / raycast->rayDirX;
+					- raycast->stepX) / 2) / raycast->ray_x;
 	}
 	else
 	{
 		raycast->perpWallDist = (raycast->mapY - data->player.y + (1
-					- raycast->stepY) / 2) / raycast->rayDirY;
+					- raycast->stepY) / 2) / raycast->ray_y;
 	}
 	raycast->lineHeight = (int)(h / raycast->perpWallDist);
 	raycast->drawStart = -raycast->lineHeight / 2 + h / 2;
@@ -58,9 +58,9 @@ void	calculate_texture_params(t_raycast *raycast, int h)
 {
 	raycast->wallX -= floor(raycast->wallX);
 	raycast->texX = (int)(raycast->wallX * (double)TEXTURE_SIZE);
-	if (raycast->side == 0 && raycast->rayDirX > 0)
+	if (raycast->side == 0 && raycast->ray_x > 0)
 		raycast->texX = TEXTURE_SIZE - raycast->texX - 1;
-	if (raycast->side == 1 && raycast->rayDirY < 0)
+	if (raycast->side == 1 && raycast->ray_y < 0)
 		raycast->texX = TEXTURE_SIZE - raycast->texX - 1;
 	raycast->step = 1.0 * TEXTURE_SIZE / raycast->lineHeight;
 	raycast->texPos = (raycast->drawStart - h / 2 + raycast->lineHeight / 2)
