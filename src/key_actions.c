@@ -52,17 +52,30 @@ int	resize_window(t_data *data, XEvent *event)
 
 void	move_player(t_data *data, char dir)
 {
-	if (dir == 'W' && data->map.map[data->player.y - 1][data->player.x] != '1')
-		data->player.y -= 1;
-	else if (dir == 'S' && data->map.map[data->player.y
-			+ 1][data->player.x] != '1')
-		data->player.y += 1;
-	else if (dir == 'A' && data->map.map[data->player.y][data->player.x
-		- 1] != '1')
-		data->player.x -= 1;
-	else if (dir == 'D' && data->map.map[data->player.y][data->player.x
-		+ 1] != '1')
-		data->player.x += 1;
+	double new_x = data->player.x;
+	double new_y = data->player.y;
+	double move_step = data->player.speed;
+
+	if (dir == 'W' || dir == 'A')
+		move_step *= 1;
+	else if (dir == 'S' || dir == 'D')
+		move_step *= -1;
+
+	if (dir == 'W' || dir == 'S')
+	{
+		new_x += data->player.dir_x * move_step;
+		new_y += data->player.dir_y * move_step;
+	}
+	else if (dir == 'A' || dir == 'D')
+	{
+		new_x += data->player.dir_y * move_step;
+		new_y -= data->player.dir_x * move_step;
+	}
+	if (data->map.map[(int)new_y][(int)new_x] == '0')
+	{
+		data->player.x = new_x;
+		data->player.y = new_y;
+	}
 }
 
 void	rotate_player(t_data *data, int dir)
@@ -73,7 +86,7 @@ void	rotate_player(t_data *data, int dir)
 
 	old_dir_x = data->player.dir_x;
 	old_plane_x = data->player.plane_x;
-	rotate_angle = dir * ROTATE_SPEED;
+	rotate_angle = dir * data->player.rot_speed;
 	data->player.dir_x = data->player.dir_x * cos(rotate_angle)
 		- data->player.dir_y * sin(rotate_angle);
 	data->player.dir_y = old_dir_x * sin(rotate_angle) + data->player.dir_y
@@ -82,5 +95,4 @@ void	rotate_player(t_data *data, int dir)
 		- data->player.plane_y * sin(rotate_angle);
 	data->player.plane_y = old_plane_x * sin(rotate_angle)
 		+ data->player.plane_y * cos(rotate_angle);
-	render_cub(data);
 }

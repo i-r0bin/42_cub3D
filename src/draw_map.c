@@ -27,7 +27,7 @@ void	draw_map(t_data *data)
 	while (y < data->map.height)
 	{
 		x = 0;
-		while (x < data->map.width)
+		while (data->map.map[y][x] != '\0')
 		{
 			if (data->map.map[y][x] == '1')
 				draw_borders(data, x, y);
@@ -39,7 +39,7 @@ void	draw_map(t_data *data)
 		}
 		y++;
 	}
-	draw_point(data, data->player.x, data->player.y);
+	draw_point(data, (int)data->player.x, (int)data->player.y);
 }
 
 void	draw_borders(t_data *data, int x, int y)

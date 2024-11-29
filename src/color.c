@@ -80,7 +80,7 @@ unsigned int	*get_color_row(t_data *data, t_texture *texture, char *line)
 	unsigned int	*row;
 	int				i;
 
-	row = malloc(sizeof(unsigned int) * texture->width);
+	row = ft_calloc(sizeof(unsigned int), texture->width + 1);
 	if (!row)
 		handle_error(data, ENOMEM, "Failed to allocate memory.");
 	i = 0;

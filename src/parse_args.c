@@ -28,47 +28,43 @@ int	parse_args(t_data *data, char **av)
 	parse_file(data, fd);
 	close(fd);
 	parse_textures(data);
+	set_point_of_view(data);
 	return (0);
 }
 
 int	parse_file(t_data *data, int fd)
 {
 	char	*line;
-	int		end_map;
-
-	end_map = 0;
-	line = get_next_line(fd);
-	while (line)
-	{
-		if (*line_start(line) == '\n' && data->map.map)
-			end_map = 1;
-		else if (*line_start(line) == '1' && end_map == 1)
-			handle_error(data, ENOEXEC, "Invalid map.");
-		parse_line(data, line);
-		free(line);
-		line = get_next_line(fd);
-	}
-	if (!data->map.map)
-		handle_error(data, ENOEXEC, "Invalid map.\tNo map found.");
+	
+	line = parse_elements_before_map(data, fd);
+	check_elements(data);
+	if (line)
+		parse_map(data, line, fd);
+	check_map(data);
 	return (0);
 }
 
-int	parse_line(t_data *data, char *line)
+char	*parse_elements_before_map(t_data *data, int fd)
 {
+	char	*line;
 	char	*start;
 
-	start = line_start(line);
-	if (is_texture(start))
-		return (save_texture_path(data, start));
-	else if (ft_strncmp(start, "F", 1) == 0)
-		return (parse_color(data, start, 0));
-	else if (ft_strncmp(start, "C", 1) == 0)
-		return (parse_color(data, start, 1));
-	else if (ft_strncmp(start, "1", 1) == 0)
-		return (parse_map(data, line));
-	else if (*start != '\0' && *start != '\n')
-		handle_error(data, ENOEXEC, "Invalid map.");
-	return (0);
+	line = get_next_line(fd);
+	while (line)
+	{
+		start = line_start(line);
+		if(ft_strncmp(start, "1", 1) == 0)
+			return (line);
+		if (is_texture(start))
+			save_texture_path(data, start);
+		else if (ft_strncmp(start, "F", 1) == 0 || ft_strncmp(start, "C", 1) == 0)
+			parse_color(data, start, *start);
+		else if (*start != '\0' && *start != '\n')
+			handle_error(data, ENOEXEC, "Invalid map.");
+		free(line);
+		line = get_next_line(fd);
+	}
+	return (NULL);
 }
 
 int	save_texture_path(t_data *data, char *line)
@@ -95,22 +91,22 @@ int	save_texture_path(t_data *data, char *line)
 	return (0);
 }
 
-int	parse_color(t_data *data, char *line, int i)
+int	parse_color(t_data *data, char *line, char c)
 {
 	int	rgb;
 
-	if (i == 0 && data->floor_color != -1)
+	if (c == 'F' && data->floor_color != -1)
 		handle_error(data, ENOEXEC,
-			"Invalid color.\tMultiple floor colors found.");
-	else if (i == 1 && data->ceiling_color != -1)
+				"Invalid color.\tMultiple floor colors found.");
+	else if (c == 'C' && data->ceiling_color != -1)
 		handle_error(data, ENOEXEC,
-			"Invalid color.\tMultiple ceiling colors found.");
+				"Invalid color.\tMultiple ceiling colors found.");
 	rgb = get_color_from_rgb_str(line + 1);
 	if (rgb == -1)
 		handle_error(data, ENOEXEC, "Invalid color.");
-	if (i == 0)
+	if (c == 'F')
 		data->floor_color = rgb;
-	else
+	else if (c == 'C')
 		data->ceiling_color = rgb;
 	return (0);
 }

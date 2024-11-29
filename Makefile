@@ -11,18 +11,21 @@ INC = -I$I -I$(LIBFT_PATH) -I$(MLX_PATH)
 SRC = \
 	$Smain.c \
 	$Sinit_data.c \
+	$Sutils.c \
 	$Skey_actions.c \
 	$Sparse_args.c \
 	$Sparse_map.c \
 	$Sparse_texture.c \
 	$Scolor.c \
 	$Scolor_utils.c \
+	$Sset_pov.c \
 	$Sdraw_map.c \
 	$Srender_cub.c \
-	$Sutils.c \
-	$Svalidate_data.c \
-	$Serror_handling.c \
 	$Srender_utils.c \
+	$Srender_column.c \
+	$Svalidate_data.c \
+	$Svalidate_map.c \
+	$Serror_handling.c
 
 OBJ = $(SRC:$S%.c=$O%.o)
 
@@ -41,8 +44,10 @@ $(LIBFT):
 
 $(MLX):
 	# Ensure MinilibX is extracted before building
-	echo "Extracting MinilibX..."; \
-	tar xf minilibx-linux.tgz -C .; \
+	@if [ ! -d "$(MLX_PATH)" ]; then \
+		echo "Extracting MinilibX..."; \
+		tar xf minilibx-linux.tgz -C .; \
+	fi
 	make -C $(MLX_PATH) all
 
 $O:
@@ -65,8 +70,6 @@ clean:
 fclean: clean
 	$(RM) $(LIBFT)
 	$(RM) $(NAME)
-	echo "Deleting MinilibX..."; \
-	rm -rf minilibx-linux.tgz -C .; \
 
 re: fclean all
 

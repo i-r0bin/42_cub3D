@@ -12,58 +12,86 @@
 
 #include "cub3d.h"
 
-void	update_map(t_data *data, char *line)
+int	parse_map(t_data *data, char *line, int fd)
+{
+	int	endmap;
+
+	endmap = 0;
+	while (line && *line != '\0')
+	{
+		if (endmap == 0)
+			endmap = parse_map_line(data, line);
+		else if (*line_start(line) != '\0' && *line_start(line) != '\n')
+			handle_error(data, ENOEXEC, "Invalid map.");
+		free(line);
+		line = get_next_line(fd);
+	}
+	return (0);
+}
+
+int	parse_map_line(t_data *data, char *line)
 {
 	int		i;
+	int		len;
 	char	**new_map;
 
-	i = 0;
-	while (data->map.map && data->map.map[i] != NULL)
-		i++;
-	new_map = ft_calloc(i + 2, sizeof(char *));
+	len = get_row_len(line);
+	if (len == 0)
+		return (1);
+	new_map = ft_calloc(data->map.height + 2, sizeof(char *));
 	i = 0;
 	while (data->map.map && data->map.map[i] != NULL)
 	{
 		new_map[i] = ft_strdup(data->map.map[i]);
-		free(data->map.map[i]);
 		i++;
 	}
-	new_map[i] = ft_strdup(line);
+	new_map[i] = ft_calloc(len + 1, sizeof(char));
+	if (new_map[i] == NULL)
+		handle_error(data, ENOMEM, "Memory allocation failed.");
+	ft_strlcpy(new_map[i], line, len + 1);
+	new_map[i + 1] = NULL;
 	if (data->map.map)
-		free(data->map.map);
+		free_matrix(data->map.map);
 	data->map.map = new_map;
 	data->map.height++;
+	if ((int)ft_strlen(new_map[i]) > data->map.width)
+		data->map.width = (int)ft_strlen(new_map[i]);
+	update_player_position(data);
+	return (0);
 }
 
-void	set_player_position(t_data *data, char *line, int i)
+int	update_player_position(t_data *data)
 {
+	int	i;
 	int	j;
 
+	i = data->map.height - 1;
 	j = 0;
-	while (line[j] != '\0' && line[j] != '\n')
+	while (data->map.map[i][j])
 	{
-		if (line[j] == 'W' || line[j] == 'E' || line[j] == 'N'
-			|| line[j] == 'S')
+		if (data->map.map[i][j] == 'W' || data->map.map[i][j] == 'E'
+			|| data->map.map[i][j] == 'N' || data->map.map[i][j] == 'S')
 		{
-			if (data->starting_dir != '0')
+			if (data->pov != '0')
 				handle_error(data, ENOEXEC,
-					"Invalid map.\tMultiple player positions found.");
-			data->player.x = j;
-			data->player.y = i;
-			data->starting_dir = line[j];
+						"Invalid map.\tMultiple player positions found.");
+			data->player.x = j + 0.5;
+			data->player.y = i + 0.5;
+			data->pov = data->map.map[i][j];
+			data->map.map[i][j] = '0';
 		}
 		j++;
 	}
-	if (j > data->map.width)
-	{
-		data->map.width = j;
-	}
-}
-
-int	parse_map(t_data *data, char *line)
-{
-	check_elements(data);
-	update_map(data, line);
-	set_player_position(data, line, data->map.height - 1);
 	return (0);
+}
+int	get_row_len(char *str)
+{
+	int	i;
+
+	i = ft_strlen(str) - 1;
+	if (i == 0)
+		return (0);
+	while (str[i] == ' ' || str[i] == '\n')
+		i--;
+	return (i + 1);
 }

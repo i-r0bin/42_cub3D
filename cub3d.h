@@ -23,9 +23,7 @@
 # include <math.h>
 
 # define MAP_SIZE 10
-# define TILE_SIZE 64
 # define TEXTURE_SIZE 64
-# define ROTATE_SPEED 0.05
 
 typedef struct s_color_table_entry
 {
@@ -46,8 +44,8 @@ typedef struct s_texture
 
 typedef struct s_player
 {
-	int					x;
-	int					y;
+	double				x;
+	double				y;
 	double				dir_x;
 	double				dir_y;
 	double				plane_x;
@@ -111,7 +109,7 @@ typedef struct s_data
 	t_mlx				mlx;
 	t_map				map;
 	t_player			player;
-	char				starting_dir;
+	char				pov;
 	t_texture			north_texture;
 	t_texture			south_texture;
 	t_texture			west_texture;
@@ -133,11 +131,17 @@ int						render(t_data *data);
 // parser
 int						parse_args(t_data *data, char **av);
 int						parse_file(t_data *data, int fd);
-int						parse_line(t_data *data, char *line);
+char					*parse_elements_before_map(t_data *data, int fd);
 int						save_texture_path(t_data *data, char *line);
-int						parse_color(t_data *data, char *line, int i);
-int						parse_map(t_data *data, char *line);
+int						parse_color(t_data *data, char *line, char c);
+int						parse_map(t_data *data, char *line, int fd);
+int						parse_map_line(t_data *data, char *line);
 int						parse_textures(t_data *data);
+int						update_player_position(t_data *data);
+int						get_row_len(char *str);
+void					set_point_of_view(t_data *data);
+void					set_horizontal_pov(t_data *data);
+void					set_vertical_pov(t_data *data);
 
 // parse texture files
 int						parse_texture_data(t_data *data, t_texture *texture);
@@ -164,6 +168,7 @@ int						check_colors(t_data *data);
 int						check_texture_format(char *format);
 int						is_texture(char *line);
 int						check_file_path(t_data *data, char *path);
+int						check_map(t_data *data);
 
 // draw map
 int						set_image(t_data *data);
@@ -186,6 +191,7 @@ void					fill_ceiling_and_floor(t_data *data, int w, int h);
 void					calculate_texture_params(t_raycast *raycast, int h);
 void					render_column(t_data *data, t_raycast *raycast, int w,
 							int x);
+int						get_tex_num(int side, double ray_x, double ray_y);
 unsigned int			get_color_from_texture(t_data *data, int texNum,
 							int texX, int texY);
 

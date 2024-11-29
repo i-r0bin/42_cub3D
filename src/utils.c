@@ -73,5 +73,10 @@ void	free_texture(t_texture *texture)
 		free(texture->color_table);
 	}
 	if (texture->color_matrix)
+	{
+		i = 0;
+		while (texture->color_matrix[i])
+			free(texture->color_matrix[i++]);
 		free(texture->color_matrix);
+	}
 }
