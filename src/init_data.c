@@ -18,8 +18,8 @@ void	init_data(t_data *data)
 	data->mlx.win_ptr = NULL;
 	data->mlx.img = NULL;
 	data->mlx.img_addr = NULL;
-	data->mlx.img_width = 640;
-	data->mlx.img_height = 480;
+	data->mlx.img_width = 960;
+	data->mlx.img_height = 720;
 	data->map.map = NULL;
 	data->map.width = 0;
 	data->map.height = 0;
@@ -31,6 +31,7 @@ void	init_data(t_data *data)
 	init_textures(data);
 	data->floor_color = -1;
 	data->ceiling_color = -1;
+	data->minimap_size = 10;
 	data->player.dir_x = 1.0;
 	data->player.dir_y = 0.0;
 	data->player.plane_x = 0.0;

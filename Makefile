@@ -22,14 +22,13 @@ SRC = \
 	$Sdraw_map.c \
 	$Srender_cub.c \
 	$Srender_utils.c \
-	$Srender_column.c \
 	$Svalidate_data.c \
 	$Svalidate_map.c \
 	$Serror_handling.c
 
 OBJ = $(SRC:$S%.c=$O%.o)
 
-NAME = cub3d
+NAME = cub3D
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror

@@ -48,14 +48,14 @@ int	check_vertical_borders(t_map *map)
     while (i < map->width)
     {
         j = 0;
-        while (map->map[j] && map->map[j][i] == ' ')
+        while (map->map[j] && (map->map[j][i] == ' ' || i >= (int)ft_strlen(map->map[j])))
             j++;
         if (map->map[j][i] != '1')
             return (1);
         while (map->map[j] && map->map[j][i])
             j++;
         j--;
-        while (map->map[j][i] == ' ')
+        while (map->map[j] && (map->map[j][i] == ' ' || i >= (int)ft_strlen(map->map[j])))
             j--;
         if (map->map[j][i] != '1')
             return (1);
@@ -77,7 +77,9 @@ int	check_map(t_data *data)
 {
 	if (data->map.map == NULL)
 		handle_error(data, ENOEXEC, "Invalid map.\tMap is missing.");
-	if (data->pov == '0')
+    if (data->map.width <= 2 || data->map.height <= 2)
+        handle_error(data, ENOEXEC, "Invalid map.\tMap is too small.");
+    if (data->pov == '0')
 		handle_error(data, ENOEXEC, "Invalid map.\tPlayer position is missing.");
 	if (check_map_characters(&data->map) == 1)
 		handle_error(data, ENOEXEC, "Invalid map.\tInvalid character found.");

@@ -1,4 +1,4 @@
-cub3d
+cub3D
 *.o
 libft/libft.a
 .vscode

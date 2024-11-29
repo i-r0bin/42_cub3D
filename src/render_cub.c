@@ -88,7 +88,7 @@ void	render_wall_columns(t_data *data, int w, int h)
 			raycast.wallX = data->player.x + raycast.perpWallDist
 				* raycast.ray_x;
 		}
-		calculate_texture_params(&raycast, h);
+		calculate_texture_params(data, &raycast, h);
 		render_column(data, &raycast, w, x);
 		x++;
 	}

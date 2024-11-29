@@ -68,15 +68,41 @@ void	fill_ceiling_and_floor(t_data *data, int w, int h)
 	}
 }
 
-void	calculate_texture_params(t_raycast *raycast, int h)
+void	calculate_texture_params(t_data *data, t_raycast *raycast, int h)
 {
-	raycast->wallX -= floor(raycast->wallX);
-	raycast->texX = (int)(raycast->wallX * (double)TEXTURE_SIZE);
-	if (raycast->side == 0 && raycast->ray_x > 0)
-		raycast->texX = TEXTURE_SIZE - raycast->texX - 1;
 	if (raycast->side == 1 && raycast->ray_y < 0)
-		raycast->texX = TEXTURE_SIZE - raycast->texX - 1;
-	raycast->step = 1.0 * TEXTURE_SIZE / raycast->lineHeight;
+		raycast->texture = &data->north_texture;
+	else if (raycast->side == 1 && raycast->ray_y > 0)
+		raycast->texture = &data->south_texture;
+	else if (raycast->side == 0 && raycast->ray_x < 0)
+		raycast->texture = &data->west_texture;
+	else
+		raycast->texture = &data->east_texture;
+	raycast->wallX -= floor(raycast->wallX);
+	raycast->texX = (int)(raycast->wallX * (double)raycast->texture->width);
+	if (raycast->side == 0 && raycast->ray_x > 0)
+		raycast->texX = raycast->texture->width - raycast->texX - 1;
+	if (raycast->side == 1 && raycast->ray_y < 0)
+		raycast->texX = raycast->texture->width - raycast->texX - 1;
+	raycast->step = 1.0 * raycast->texture->height / raycast->lineHeight;
 	raycast->texPos = (raycast->drawStart - h / 2 + raycast->lineHeight / 2)
 		* raycast->step;
+}
+
+void	render_column(t_data *data, t_raycast *raycast, int w, int x)
+{
+	int	y;
+
+	y = raycast->drawStart;
+	while (y < raycast->drawEnd)
+	{
+		raycast->texY = (int)raycast->texPos & (raycast->texture->height - 1);
+		raycast->texPos += raycast->step;
+		raycast->color = raycast->texture->color_matrix[raycast->texY]
+			[raycast->texX];
+		if (raycast->side == 1) // or side == 0 ?
+			raycast->color = (raycast->color >> 1) & 0x7F7F7F;
+		data->mlx.img_addr[y * w + x] = raycast->color;
+		y++;
+	}
 }
