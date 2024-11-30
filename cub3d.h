@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 03:01:02 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/11/27 03:01:04 by ppezzull         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:55:12 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ typedef struct s_data
 	t_texture			east_texture;
 	int					floor_color;
 	int					ceiling_color;
-	int					minimap_size;
 }						t_data;
 
 void					print_controls(void);
@@ -125,6 +124,7 @@ void					init_mlx(t_data *data);
 void					init_textures(t_data *data);
 void					listen_for_input(t_data *data);
 int						render(t_data *data);
+int						set_image(t_data *data);
 
 // parser
 int						parse_args(t_data *data, char **av);
@@ -134,14 +134,13 @@ int						save_texture_path(t_data *data, char *line);
 int						parse_color(t_data *data, char *line, char c);
 int						parse_map(t_data *data, char *line, int fd);
 int						parse_map_line(t_data *data, char *line);
-int						parse_textures(t_data *data);
 int						update_player_position(t_data *data);
-int						get_row_len(char *str);
 void					set_point_of_view(t_data *data);
 void					set_horizontal_pov(t_data *data);
 void					set_vertical_pov(t_data *data);
 
 // parse texture files
+int						parse_textures(t_data *data);
 int						parse_texture_data(t_data *data, t_texture *texture);
 void					parse_texture_info(char *line, t_texture *texture,
 							t_data *data);
@@ -167,49 +166,38 @@ int						check_texture_format(char *format);
 int						is_texture(char *line);
 int						check_file_path(t_data *data, char *path);
 int						check_map(t_data *data);
-
-// draw map
-int						set_image(t_data *data);
-void					draw_map(t_data *data);
-void					draw_borders(t_data *data, int x, int y);
-void					draw_floor(t_data *data, int x, int y);
-void					draw_point(t_data *data, int x, int y);
+int						check_map_characters(t_map *map);
+int						check_map_borders(t_map *map);
 
 // raycasting
+void					render_cub(t_data *data);
+void					fill_ceiling_and_floor(t_data *data, int w, int h);
+void					render_wall_columns(t_data *data, int w, int h);
 void					init_raycast(t_raycast *raycast, t_data *data, int x,
 							int w);
 void					calculate_step_and_side(t_raycast *raycast,
 							t_data *data);
 void					perform_dda(t_raycast *raycast, t_data *data);
-void					render_wall_columns(t_data *data, int w, int h);
-void					render_cub(t_data *data);
 void					calculate_wall_params(t_raycast *raycast, t_data *data,
 							int h);
-void					fill_ceiling_and_floor(t_data *data, int w, int h);
 void					calculate_texture_params(t_data *data,
 							t_raycast *raycast, int h);
 void					render_column(t_data *data, t_raycast *raycast, int w,
 							int x);
-t_texture				*get_texture(t_data *data, int side, double ray_x,
-							double ray_y);
 
 // key actions
+int						cub_exit(t_data *data);
+int						resize_window(t_data *data, XEvent *event);
 int						key_press(int keycode, t_data *data);
 void					move_player(t_data *data, char dir);
 void					rotate_player(t_data *data, int dir);
-int						resize_window(t_data *data, XEvent *event);
-int						cub_exit(t_data *data);
+void					calculate_new_position(t_data *data, char dir, double *new_x,
+							double *new_y);
 
 // utils
 char					*line_start(char *line);
-void					set_zoom(int *x, int *y, int zoom);
-void					cub_free(t_data *data);
-void					free_matrix(char **matrix);
-void					free_texture(t_texture *texture);
 char					**ft_strtrim_split_args(char **strs, char *set);
 int						ft_isdigit_split_args(char **strs);
-int						cub_exit(t_data *data);
-int						resize_window(t_data *data, XEvent *event);
 int						get_row_len(char *str);
 
 // free data
@@ -220,5 +208,15 @@ void					free_matrix(char **matrix);
 // error handling
 int						handle_error(t_data *data, int err, char *msg);
 int						err_msg(char *msg, int err);
+
+// -------------------------------- bonus --------------------------------
+int						render_bonus(t_data *data);
+
+// draw map
+void					draw_map(t_data *data, int mapsize);
+void 					draw_player(t_data *data, int mapsize, unsigned int color);
+void					draw_square(t_data *data, int x, int y, int mapsize, unsigned int color);
+void 					draw_circle(t_data *data, int x_center, int y_center, int radius, unsigned int color);
+void					draw_map_background(t_data *data, int mapsize, unsigned int color);
 
 #endif

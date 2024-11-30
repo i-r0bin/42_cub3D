@@ -19,7 +19,6 @@ SRC = \
 	$Scolor.c \
 	$Scolor_utils.c \
 	$Sset_pov.c \
-	$Sdraw_map.c \
 	$Srender_cub.c \
 	$Srender_utils.c \
 	$Svalidate_data.c \
@@ -27,9 +26,30 @@ SRC = \
 	$Serror_handling.c \
 	$Sfree.c
 
+BSRC = \
+	$Smain_bonus.c \
+	$Sinit_data.c \
+	$Sutils.c \
+	$Skey_actions.c \
+	$Sparse_args.c \
+	$Sparse_map.c \
+	$Sparse_texture.c \
+	$Scolor.c \
+	$Scolor_utils.c \
+	$Sset_pov.c \
+	$Srender_cub.c \
+	$Srender_utils.c \
+	$Svalidate_data.c \
+	$Svalidate_map.c \
+	$Serror_handling.c \
+	$Sfree.c \
+	$Sdraw_map.c
+
 OBJ = $(SRC:$S%.c=$O%.o)
+BOBJ = $(BSRC:$S%.c=$O%.o)
 
 NAME = cub3D
+NAME_B = cub3D_bonus
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
@@ -55,25 +75,32 @@ $O:
 
 $(OBJ): | $O
 
+$(BOBJ): | $O
+
 $O%.o: $S%.c
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(NAME): $(MLX) $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LIB) $(INC)
 
+bonus:	$(NAME_B)
+
+$(NAME_B): $(MLX) $(LIBFT) $(BOBJ)
+	$(CC) $(CFLAGS) $(BOBJ) -o $@ $(LIB) $(INC)
+
 clean:
 	make -C $(LIBFT_PATH) clean
 	make -C $(MLX_PATH) clean
-	$(RM) $(OBJ)
+	$(RM) $(OBJ) $(BOBJ)
 	if [ -d $O ]; then $(RMDIR) $O; fi
 
 fclean: clean
 	$(RM) $(LIBFT)
-	$(RM) $(NAME)
+	$(RM) $(NAME) $(NAME_B)
 
 re: fclean all
 
 format:
 	@c_formatter_42 $(S)*.c cub3d.h
 
-.PHONY: all clean fclean re extract format
+.PHONY: all bonus clean fclean re extract format

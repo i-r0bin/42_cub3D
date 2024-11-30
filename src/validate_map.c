@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   validate_map.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppezzull <ppezzull@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:57:03 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/11/30 15:57:05 by ppezzull         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:12:52 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int	check_map(t_data *data)
+{
+	if (data->map.map == NULL)
+		handle_error(data, ENOEXEC, "Invalid map.\tMap is missing.");
+	if (data->map.width <= 2 || data->map.height <= 2)
+		handle_error(data, ENOEXEC, "Invalid map.\tMap is too small.");
+	if (data->pov == '0')
+		handle_error(data, ENOEXEC,
+			"Invalid map.\tPlayer position is missing.");
+	if (check_map_characters(&data->map) == 1)
+		handle_error(data, ENOEXEC, "Invalid map.\tInvalid character found.");
+	if (check_map_borders(&data->map) == 1)
+		handle_error(data, ENOEXEC, "Invalid map.\tMap is not closed.");
+	return (0);
+}
 
 int	check_map_characters(t_map *map)
 {
@@ -84,21 +100,5 @@ int	check_map_borders(t_map *map)
 		return (1);
 	if (check_vertical_borders(map) == 1)
 		return (1);
-	return (0);
-}
-
-int	check_map(t_data *data)
-{
-	if (data->map.map == NULL)
-		handle_error(data, ENOEXEC, "Invalid map.\tMap is missing.");
-	if (data->map.width <= 2 || data->map.height <= 2)
-		handle_error(data, ENOEXEC, "Invalid map.\tMap is too small.");
-	if (data->pov == '0')
-		handle_error(data, ENOEXEC,
-			"Invalid map.\tPlayer position is missing.");
-	if (check_map_characters(&data->map) == 1)
-		handle_error(data, ENOEXEC, "Invalid map.\tInvalid character found.");
-	if (check_map_borders(&data->map) == 1)
-		handle_error(data, ENOEXEC, "Invalid map.\tMap is not closed.");
 	return (0);
 }

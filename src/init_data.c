@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 02:59:46 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/11/27 02:59:48 by ppezzull         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:12:36 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	init_data(t_data *data)
 	init_textures(data);
 	data->floor_color = -1;
 	data->ceiling_color = -1;
-	data->minimap_size = 10;
 	data->player.dir_x = 1.0;
 	data->player.dir_y = 0.0;
 	data->player.plane_x = 0.0;

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   render_cub.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 03:00:35 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/11/27 03:00:38 by ppezzull         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:47:00 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h" // Include necessary headers and declarations
+#include "cub3d.h"
 
 void	calculate_step_and_side(t_raycast *raycast, t_data *data)
 {
