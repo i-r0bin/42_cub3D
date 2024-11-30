@@ -186,10 +186,12 @@ void					render_cub(t_data *data);
 void					calculate_wall_params(t_raycast *raycast, t_data *data,
 							int h);
 void					fill_ceiling_and_floor(t_data *data, int w, int h);
-void					calculate_texture_params(t_data *data, t_raycast *raycast, int h);
+void					calculate_texture_params(t_data *data,
+							t_raycast *raycast, int h);
 void					render_column(t_data *data, t_raycast *raycast, int w,
 							int x);
-t_texture	*get_texture(t_data *data, int side, double ray_x, double ray_y);
+t_texture				*get_texture(t_data *data, int side, double ray_x,
+							double ray_y);
 
 // key actions
 int						key_press(int keycode, t_data *data);

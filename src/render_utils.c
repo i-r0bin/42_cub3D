@@ -98,9 +98,9 @@ void	render_column(t_data *data, t_raycast *raycast, int w, int x)
 	{
 		raycast->texY = (int)raycast->texPos & (raycast->texture->height - 1);
 		raycast->texPos += raycast->step;
-		raycast->color = raycast->texture->color_matrix[raycast->texY]
-			[raycast->texX];
-		if (raycast->side == 1) // or side == 0 ?
+		raycast->color = raycast
+			->texture->color_matrix[raycast->texY][raycast->texX];
+		if (raycast->side == 1)
 			raycast->color = (raycast->color >> 1) & 0x7F7F7F;
 		data->mlx.img_addr[y * w + x] = raycast->color;
 		y++;

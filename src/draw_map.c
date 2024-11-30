@@ -79,7 +79,8 @@ void	draw_floor(t_data *data, int x, int y)
 			if (x + j > data->mlx.img_width || y + i > data->mlx.img_height
 				|| x < 0 || y < 0)
 				break ;
-			if (i == 0 || i == data->minimap_size - 1 || j == 0 || j == data->minimap_size - 1)
+			if (i == 0 || i == data->minimap_size - 1 || j == 0
+				|| j == data->minimap_size - 1)
 				data->mlx.img_addr[(y + i) * data->mlx.img_width + (x
 						+ j)] = 0x000000;
 			else
