@@ -12,10 +12,10 @@
 
 #include "cub3d.h"
 
-void	set_zoom(int *x, int *y)
+void	set_zoom(int *x, int *y, int zoom)
 {
-	*x *= MAP_SIZE;
-	*y *= MAP_SIZE;
+	*x *= zoom;
+	*y *= zoom;
 }
 
 void	draw_map(t_data *data)
@@ -47,12 +47,12 @@ void	draw_borders(t_data *data, int x, int y)
 	int	i;
 	int	j;
 
-	set_zoom(&x, &y);
+	set_zoom(&x, &y, data->minimap_size);
 	i = 0;
-	while (i < MAP_SIZE)
+	while (i < data->minimap_size)
 	{
 		j = 0;
-		while (j < MAP_SIZE)
+		while (j < data->minimap_size)
 		{
 			if (!(x + j > data->mlx.img_width || y + i > data->mlx.img_height
 					|| x < 0 || y < 0))
@@ -69,17 +69,17 @@ void	draw_floor(t_data *data, int x, int y)
 	int	i;
 	int	j;
 
-	set_zoom(&x, &y);
+	set_zoom(&x, &y, data->minimap_size);
 	i = 0;
-	while (i < MAP_SIZE)
+	while (i < data->minimap_size)
 	{
 		j = 0;
-		while (j < MAP_SIZE)
+		while (j < data->minimap_size)
 		{
 			if (x + j > data->mlx.img_width || y + i > data->mlx.img_height
 				|| x < 0 || y < 0)
 				break ;
-			if (i == 0 || i == MAP_SIZE - 1 || j == 0 || j == MAP_SIZE - 1)
+			if (i == 0 || i == data->minimap_size - 1 || j == 0 || j == data->minimap_size - 1)
 				data->mlx.img_addr[(y + i) * data->mlx.img_width + (x
 						+ j)] = 0x000000;
 			else
@@ -99,19 +99,19 @@ void	draw_point(t_data *data, int x, int y)
 	int	dx;
 	int	dy;
 
-	set_zoom(&x, &y);
+	set_zoom(&x, &y, data->minimap_size);
 	i = -1;
-	while (++i < MAP_SIZE)
+	while (++i < data->minimap_size)
 	{
 		j = 0;
-		while (j < MAP_SIZE)
+		while (j < data->minimap_size)
 		{
 			if (x + j > data->mlx.img_width || y + i > data->mlx.img_height
 				|| x < 0 || y < 0)
 				break ;
-			radius = MAP_SIZE / 4;
-			dx = j - MAP_SIZE / 2;
-			dy = i - MAP_SIZE / 2;
+			radius = data->minimap_size / 4;
+			dx = j - data->minimap_size / 2;
+			dy = i - data->minimap_size / 2;
 			if (dx * dx + dy * dy <= radius * radius)
 				data->mlx.img_addr[(y + i) * data->mlx.img_width + (x
 						+ j)] = 0xff0000;

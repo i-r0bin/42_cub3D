@@ -22,9 +22,6 @@
 # include <fcntl.h>
 # include <math.h>
 
-# define MAP_SIZE 10
-# define TEXTURE_SIZE 64
-
 typedef struct s_color_table_entry
 {
 	char				*symbol;
@@ -85,7 +82,7 @@ typedef struct s_raycast
 	double				step;
 	double				texPos;
 	int					texY;
-	int					texNum;
+	t_texture			*texture;
 	unsigned int		color;
 }						t_raycast;
 
@@ -116,6 +113,7 @@ typedef struct s_data
 	t_texture			east_texture;
 	int					floor_color;
 	int					ceiling_color;
+	int					minimap_size;
 }						t_data;
 
 void					print_controls(void);
@@ -188,12 +186,10 @@ void					render_cub(t_data *data);
 void					calculate_wall_params(t_raycast *raycast, t_data *data,
 							int h);
 void					fill_ceiling_and_floor(t_data *data, int w, int h);
-void					calculate_texture_params(t_raycast *raycast, int h);
+void					calculate_texture_params(t_data *data, t_raycast *raycast, int h);
 void					render_column(t_data *data, t_raycast *raycast, int w,
 							int x);
-int						get_tex_num(int side, double ray_x, double ray_y);
-unsigned int			get_color_from_texture(t_data *data, int texNum,
-							int texX, int texY);
+t_texture	*get_texture(t_data *data, int side, double ray_x, double ray_y);
 
 // key actions
 int						key_press(int keycode, t_data *data);
@@ -204,7 +200,7 @@ int						cub_exit(t_data *data);
 
 // utils
 char					*line_start(char *line);
-void					set_zoom(int *x, int *y);
+void					set_zoom(int *x, int *y, int zoom);
 void					cub_free(t_data *data);
 void					free_matrix(char **matrix);
 void					free_texture(t_texture *texture);
