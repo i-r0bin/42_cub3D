@@ -99,7 +99,8 @@ void	parse_color_matrix(t_data *data, t_texture *texture, int fd)
 	char	*line;
 	int		i;
 
-	texture->color_matrix = ft_calloc(sizeof(unsigned int *), texture->height + 1);
+	texture->color_matrix = ft_calloc(sizeof(unsigned int *), texture->height
+			+ 1);
 	if (!texture->color_matrix)
 		handle_error(data, ENOMEM, "Failed to allocate memory.");
 	i = 0;

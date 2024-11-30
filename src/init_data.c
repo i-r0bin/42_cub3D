@@ -26,8 +26,8 @@ void	init_data(t_data *data)
 	data->player.x = 0.0;
 	data->player.y = 0.0;
 	data->pov = '0';
-	data->player.speed = 0.05;
-	data->player.rot_speed = 0.015;
+	data->player.speed = 0.2;
+	data->player.rot_speed = 0.1;
 	init_textures(data);
 	data->floor_color = -1;
 	data->ceiling_color = -1;

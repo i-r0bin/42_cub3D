@@ -30,53 +30,33 @@ int	is_texture(char *line)
 	return (0);
 }
 
-void	cub_free(t_data *data)
+int	cub_exit(t_data *data)
 {
-	free_texture(&data->north_texture);
-	free_texture(&data->south_texture);
-	free_texture(&data->west_texture);
-	free_texture(&data->east_texture);
-	if (data->map.map)
-		free_matrix(data->map.map);
-	if (data->mlx.img)
-		mlx_destroy_image(data->mlx.mlx_ptr, data->mlx.img);
-	if (data->mlx.win_ptr)
-		mlx_destroy_window(data->mlx.mlx_ptr, data->mlx.win_ptr);
-	if (data->mlx.mlx_ptr)
-	{
-		mlx_destroy_display(data->mlx.mlx_ptr);
-		free(data->mlx.mlx_ptr);
-	}
+	cub_free(data);
+	exit(0);
 }
 
-void	free_matrix(char **matrix)
+int	resize_window(t_data *data, XEvent *event)
+{
+	XConfigureEvent	xce;
+
+	if (event->type == ConfigureNotify)
+	{
+		xce = event->xconfigure;
+		data->mlx.img_width = xce.width;
+		data->mlx.img_height = xce.height;
+	}
+	return (0);
+}
+
+int	get_row_len(char *str)
 {
 	int	i;
 
-	i = 0;
-	while (matrix[i])
-		free(matrix[i++]);
-	free(matrix);
-}
-
-void	free_texture(t_texture *texture)
-{
-	int	i;
-
-	i = 0;
-	if (texture->path)
-		free(texture->path);
-	if (texture->color_table)
-	{
-		while (i < texture->colors_num)
-			free(texture->color_table[i++].symbol);
-		free(texture->color_table);
-	}
-	if (texture->color_matrix)
-	{
-		i = 0;
-		while (texture->color_matrix[i])
-			free(texture->color_matrix[i++]);
-		free(texture->color_matrix);
-	}
+	i = ft_strlen(str) - 1;
+	if (i == 0)
+		return (0);
+	while (str[i] == ' ' || str[i] == '\n')
+		i--;
+	return (i + 1);
 }

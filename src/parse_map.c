@@ -29,34 +29,53 @@ int	parse_map(t_data *data, char *line, int fd)
 	return (0);
 }
 
-int	parse_map_line(t_data *data, char *line)
+char	**create_new_map(t_data *data, char *line, int len)
 {
-	int		i;
-	int		len;
 	char	**new_map;
+	int		i;
 
-	len = get_row_len(line);
-	if (len == 0)
-		return (1);
 	new_map = ft_calloc(data->map.height + 2, sizeof(char *));
+	if (!new_map)
+		handle_error(data, ENOMEM, "Memory allocation failed.");
 	i = 0;
 	while (data->map.map && data->map.map[i] != NULL)
 	{
 		new_map[i] = ft_strdup(data->map.map[i]);
+		if (!new_map[i])
+			handle_error(data, ENOMEM, "Memory allocation failed.");
 		i++;
 	}
 	new_map[i] = ft_calloc(len + 1, sizeof(char));
-	if (new_map[i] == NULL)
+	if (!new_map[i])
 		handle_error(data, ENOMEM, "Memory allocation failed.");
 	ft_strlcpy(new_map[i], line, len + 1);
 	new_map[i + 1] = NULL;
+	return (new_map);
+}
+
+void	update_map_data(t_data *data, char **new_map, int len)
+{
 	if (data->map.map)
 		free_matrix(data->map.map);
 	data->map.map = new_map;
 	data->map.height++;
-	if ((int)ft_strlen(new_map[i]) > data->map.width)
-		data->map.width = (int)ft_strlen(new_map[i]);
+	if (len > data->map.width)
+		data->map.width = len;
 	update_player_position(data);
+}
+
+int	parse_map_line(t_data *data, char *line)
+{
+	char	**new_map;
+	int		len;
+
+	len = get_row_len(line);
+	if (len == 0)
+		return (1);
+	new_map = create_new_map(data, line, len);
+	if (!new_map)
+		return (1);
+	update_map_data(data, new_map, len);
 	return (0);
 }
 
@@ -74,7 +93,7 @@ int	update_player_position(t_data *data)
 		{
 			if (data->pov != '0')
 				handle_error(data, ENOEXEC,
-						"Invalid map.\tMultiple player positions found.");
+					"Invalid map.\tMultiple player positions found.");
 			data->player.x = j + 0.5;
 			data->player.y = i + 0.5;
 			data->pov = data->map.map[i][j];
@@ -83,15 +102,4 @@ int	update_player_position(t_data *data)
 		j++;
 	}
 	return (0);
-}
-int	get_row_len(char *str)
-{
-	int	i;
-
-	i = ft_strlen(str) - 1;
-	if (i == 0)
-		return (0);
-	while (str[i] == ' ' || str[i] == '\n')
-		i--;
-	return (i + 1);
 }

@@ -210,6 +210,9 @@ void					free_matrix(char **matrix);
 void					free_texture(t_texture *texture);
 char					**ft_strtrim_split_args(char **strs, char *set);
 int						ft_isdigit_split_args(char **strs);
+int						cub_exit(t_data *data);
+int						resize_window(t_data *data, XEvent *event);
+int						get_row_len(char *str);
 
 // free data
 void					cub_free(t_data *data);

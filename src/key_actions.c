@@ -31,46 +31,36 @@ int	key_press(int keycode, t_data *data)
 	return (0);
 }
 
-int	cub_exit(t_data *data)
+void	calculate_new_position(t_data *data, char dir, double *new_x,
+		double *new_y)
 {
-	cub_free(data);
-	exit(0);
-}
+	double	move_step;
 
-int	resize_window(t_data *data, XEvent *event)
-{
-	XConfigureEvent	xce;
-
-	if (event->type == ConfigureNotify)
-	{
-		xce = event->xconfigure;
-		data->mlx.img_width = xce.width;
-		data->mlx.img_height = xce.height;
-	}
-	return (0);
-}
-
-void	move_player(t_data *data, char dir)
-{
-	double new_x = data->player.x;
-	double new_y = data->player.y;
-	double move_step = data->player.speed;
-
+	*new_x = data->player.x;
+	*new_y = data->player.y;
+	move_step = data->player.speed;
 	if (dir == 'W' || dir == 'A')
 		move_step *= 1;
 	else if (dir == 'S' || dir == 'D')
 		move_step *= -1;
-
 	if (dir == 'W' || dir == 'S')
 	{
-		new_x += data->player.dir_x * move_step;
-		new_y += data->player.dir_y * move_step;
+		*new_x += data->player.dir_x * move_step;
+		*new_y += data->player.dir_y * move_step;
 	}
 	else if (dir == 'A' || dir == 'D')
 	{
-		new_x += data->player.dir_y * move_step;
-		new_y -= data->player.dir_x * move_step;
+		*new_x += data->player.dir_y * move_step;
+		*new_y -= data->player.dir_x * move_step;
 	}
+}
+
+void	move_player(t_data *data, char dir)
+{
+	double	new_x;
+	double	new_y;
+
+	calculate_new_position(data, dir, &new_x, &new_y);
 	if (data->map.map[(int)new_y][(int)new_x] == '0')
 	{
 		data->player.x = new_x;

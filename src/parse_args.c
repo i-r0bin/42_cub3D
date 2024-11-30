@@ -35,7 +35,7 @@ int	parse_args(t_data *data, char **av)
 int	parse_file(t_data *data, int fd)
 {
 	char	*line;
-	
+
 	line = parse_elements_before_map(data, fd);
 	check_elements(data);
 	if (line)
@@ -53,11 +53,12 @@ char	*parse_elements_before_map(t_data *data, int fd)
 	while (line)
 	{
 		start = line_start(line);
-		if(ft_strncmp(start, "1", 1) == 0)
+		if (ft_strncmp(start, "1", 1) == 0)
 			return (line);
 		if (is_texture(start))
 			save_texture_path(data, start);
-		else if (ft_strncmp(start, "F", 1) == 0 || ft_strncmp(start, "C", 1) == 0)
+		else if (ft_strncmp(start, "F", 1) == 0 || ft_strncmp(start, "C",
+				1) == 0)
 			parse_color(data, start, *start);
 		else if (*start != '\0' && *start != '\n')
 			handle_error(data, ENOEXEC, "Invalid map.");
@@ -97,10 +98,10 @@ int	parse_color(t_data *data, char *line, char c)
 
 	if (c == 'F' && data->floor_color != -1)
 		handle_error(data, ENOEXEC,
-				"Invalid color.\tMultiple floor colors found.");
+			"Invalid color.\tMultiple floor colors found.");
 	else if (c == 'C' && data->ceiling_color != -1)
 		handle_error(data, ENOEXEC,
-				"Invalid color.\tMultiple ceiling colors found.");
+			"Invalid color.\tMultiple ceiling colors found.");
 	rgb = get_color_from_rgb_str(line + 1);
 	if (rgb == -1)
 		handle_error(data, ENOEXEC, "Invalid color.");

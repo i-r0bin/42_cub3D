@@ -25,7 +25,8 @@ SRC = \
 	$Srender_column.c \
 	$Svalidate_data.c \
 	$Svalidate_map.c \
-	$Serror_handling.c
+	$Serror_handling.c \
+	$Sfree.c
 
 OBJ = $(SRC:$S%.c=$O%.o)
 
