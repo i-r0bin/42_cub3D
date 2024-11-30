@@ -16,42 +16,42 @@ void	calculate_step_and_side(t_raycast *raycast, t_data *data)
 {
 	if (raycast->ray_x < 0)
 	{
-		raycast->stepX = -1;
-		raycast->sideDistX = (data->player.x - raycast->mapX)
-			* raycast->deltaDistX;
+		raycast->step_x = -1;
+		raycast->side_x = (data->player.x - raycast->map_x)
+			* raycast->delta_x;
 	}
 	else
 	{
-		raycast->stepX = 1;
-		raycast->sideDistX = (raycast->mapX + 1.0 - data->player.x)
-			* raycast->deltaDistX;
+		raycast->step_x = 1;
+		raycast->side_x = (raycast->map_x + 1.0 - data->player.x)
+			* raycast->delta_x;
 	}
 	if (raycast->ray_y < 0)
 	{
-		raycast->stepY = -1;
-		raycast->sideDistY = (data->player.y - raycast->mapY)
-			* raycast->deltaDistY;
+		raycast->step_y = -1;
+		raycast->side_y = (data->player.y - raycast->map_y)
+			* raycast->delta_y;
 	}
 	else
 	{
-		raycast->stepY = 1;
-		raycast->sideDistY = (raycast->mapY + 1.0 - data->player.y)
-			* raycast->deltaDistY;
+		raycast->step_y = 1;
+		raycast->side_y = (raycast->map_y + 1.0 - data->player.y)
+			* raycast->delta_y;
 	}
 }
 
 void	step_and_update_side_dist(t_raycast *raycast)
 {
-	if (raycast->sideDistX < raycast->sideDistY)
+	if (raycast->side_x < raycast->side_y)
 	{
-		raycast->sideDistX += raycast->deltaDistX;
-		raycast->mapX += raycast->stepX;
+		raycast->side_x += raycast->delta_x;
+		raycast->map_x += raycast->step_x;
 		raycast->side = 0;
 	}
 	else
 	{
-		raycast->sideDistY += raycast->deltaDistY;
-		raycast->mapY += raycast->stepY;
+		raycast->side_y += raycast->delta_y;
+		raycast->map_y += raycast->step_y;
 		raycast->side = 1;
 	}
 }
@@ -61,7 +61,7 @@ void	perform_dda(t_raycast *raycast, t_data *data)
 	while (!raycast->hit)
 	{
 		step_and_update_side_dist(raycast);
-		if (data->map.map[raycast->mapY][raycast->mapX] == '1')
+		if (data->map.map[raycast->map_y][raycast->map_x] == '1')
 			raycast->hit = 1;
 	}
 }
@@ -80,12 +80,12 @@ void	render_wall_columns(t_data *data, int w, int h)
 		calculate_wall_params(&raycast, data, h);
 		if (raycast.side == 0)
 		{
-			raycast.wallX = data->player.y + raycast.perpWallDist
+			raycast.wall_x = data->player.y + raycast.wall_dist
 				* raycast.ray_y;
 		}
 		else
 		{
-			raycast.wallX = data->player.x + raycast.perpWallDist
+			raycast.wall_x = data->player.x + raycast.wall_dist
 				* raycast.ray_x;
 		}
 		calculate_texture_params(data, &raycast, h);

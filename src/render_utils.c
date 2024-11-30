@@ -19,10 +19,10 @@ void	init_raycast(t_raycast *raycast, t_data *data, int x, int w)
 		* raycast->camera_x;
 	raycast->ray_y = data->player.dir_y + data->player.plane_y
 		* raycast->camera_x;
-	raycast->mapX = (int)data->player.x;
-	raycast->mapY = (int)data->player.y;
-	raycast->deltaDistX = fabs(1 / raycast->ray_x);
-	raycast->deltaDistY = fabs(1 / raycast->ray_y);
+	raycast->map_x = (int)data->player.x;
+	raycast->map_y = (int)data->player.y;
+	raycast->delta_x = fabs(1 / raycast->ray_x);
+	raycast->delta_y = fabs(1 / raycast->ray_y);
 	raycast->hit = 0;
 }
 
@@ -30,21 +30,21 @@ void	calculate_wall_params(t_raycast *raycast, t_data *data, int h)
 {
 	if (raycast->side == 0)
 	{
-		raycast->perpWallDist = (raycast->mapX - data->player.x + (1
-					- raycast->stepX) / 2) / raycast->ray_x;
+		raycast->wall_dist = (raycast->map_x - data->player.x + (1
+					- raycast->step_x) / 2) / raycast->ray_x;
 	}
 	else
 	{
-		raycast->perpWallDist = (raycast->mapY - data->player.y + (1
-					- raycast->stepY) / 2) / raycast->ray_y;
+		raycast->wall_dist = (raycast->map_y - data->player.y + (1
+					- raycast->step_y) / 2) / raycast->ray_y;
 	}
-	raycast->lineHeight = (int)(h / raycast->perpWallDist);
-	raycast->drawStart = -raycast->lineHeight / 2 + h / 2;
-	raycast->drawEnd = raycast->lineHeight / 2 + h / 2;
-	if (raycast->drawStart < 0)
-		raycast->drawStart = 0;
-	if (raycast->drawEnd >= h)
-		raycast->drawEnd = h - 1;
+	raycast->line_h = (int)(h / raycast->wall_dist);
+	raycast->draw_start = -raycast->line_h / 2 + h / 2;
+	raycast->draw_end = raycast->line_h / 2 + h / 2;
+	if (raycast->draw_start < 0)
+		raycast->draw_start = 0;
+	if (raycast->draw_end >= h)
+		raycast->draw_end = h - 1;
 }
 
 void	fill_ceiling_and_floor(t_data *data, int w, int h)
@@ -78,14 +78,14 @@ void	calculate_texture_params(t_data *data, t_raycast *raycast, int h)
 		raycast->texture = &data->west_texture;
 	else
 		raycast->texture = &data->east_texture;
-	raycast->wallX -= floor(raycast->wallX);
-	raycast->texX = (int)(raycast->wallX * (double)raycast->texture->width);
+	raycast->wall_x -= floor(raycast->wall_x);
+	raycast->tex_x = (int)(raycast->wall_x * (double)raycast->texture->width);
 	if (raycast->side == 0 && raycast->ray_x > 0)
-		raycast->texX = raycast->texture->width - raycast->texX - 1;
+		raycast->tex_x = raycast->texture->width - raycast->tex_x - 1;
 	if (raycast->side == 1 && raycast->ray_y < 0)
-		raycast->texX = raycast->texture->width - raycast->texX - 1;
-	raycast->step = 1.0 * raycast->texture->height / raycast->lineHeight;
-	raycast->texPos = (raycast->drawStart - h / 2 + raycast->lineHeight / 2)
+		raycast->tex_x = raycast->texture->width - raycast->tex_x - 1;
+	raycast->step = 1.0 * raycast->texture->height / raycast->line_h;
+	raycast->tex_pos = (raycast->draw_start - h / 2 + raycast->line_h / 2)
 		* raycast->step;
 }
 
@@ -93,13 +93,13 @@ void	render_column(t_data *data, t_raycast *raycast, int w, int x)
 {
 	int	y;
 
-	y = raycast->drawStart;
-	while (y < raycast->drawEnd)
+	y = raycast->draw_start;
+	while (y < raycast->draw_end)
 	{
-		raycast->texY = (int)raycast->texPos & (raycast->texture->height - 1);
-		raycast->texPos += raycast->step;
+		raycast->tex_y = (int)raycast->tex_pos & (raycast->texture->height - 1);
+		raycast->tex_pos += raycast->step;
 		raycast->color = raycast
-			->texture->color_matrix[raycast->texY][raycast->texX];
+			->texture->color_matrix[raycast->tex_y][raycast->tex_x];
 		if (raycast->side == 1)
 			raycast->color = (raycast->color >> 1) & 0x7F7F7F;
 		data->mlx.img_addr[y * w + x] = raycast->color;
