@@ -202,8 +202,8 @@ int						resize_window(t_data *data, XEvent *event);
 int						key_press(int keycode, t_data *data);
 void					move_player(t_data *data, char dir);
 void					rotate_player(t_data *data, int dir);
-void					calculate_new_position(t_data *data, char dir, double *new_x,
-							double *new_y);
+void					calculate_new_position(t_data *data, char dir,
+							double *new_x, double *new_y);
 
 // utils
 char					*line_start(char *line);
@@ -225,9 +225,10 @@ int						render_bonus(t_data *data);
 
 // draw map
 void					draw_map(t_data *data);
-void					init_minimap(t_data *data, t_minimap *minimap);	
-void 					draw_player(t_data *data, t_minimap *minimap);
-void					draw_square(t_data *data, int x, int y, t_minimap *minimap);
+void					init_minimap(t_data *data, t_minimap *minimap);
+void					draw_player(t_data *data, t_minimap *minimap);
+void					draw_square(t_data *data, int x, int y,
+							t_minimap *minimap);
 void					draw_map_background(t_data *data, t_minimap *minimap);
 
 #endif

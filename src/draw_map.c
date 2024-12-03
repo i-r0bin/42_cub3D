@@ -14,9 +14,9 @@
 
 void	draw_map(t_data *data)
 {
-	int	x;
-	int	y;
-	t_minimap minimap;
+	int			x;
+	int			y;
+	t_minimap	minimap;
 
 	init_minimap(data, &minimap);
 	draw_map_background(data, &minimap);
@@ -62,17 +62,18 @@ void	draw_square(t_data *data, int x, int y, t_minimap *minimap)
 			if (x + j > data->mlx.img_width || y + i > data->mlx.img_height
 				|| x < 0 || y < 0)
 				break ;
-			data->mlx.img_addr[(y + i) * data->mlx.img_width + (x + j)] = minimap->wall_color;
+			data->mlx.img_addr[(y + i) * data->mlx.img_width + (x
+					+ j)] = minimap->wall_color;
 			j++;
 		}
 		i++;
 	}
 }
 
-void draw_player(t_data *data, t_minimap *minimap)
+void	draw_player(t_data *data, t_minimap *minimap)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	x = -minimap->radius;
 	while (x <= minimap->radius)
@@ -80,11 +81,13 @@ void draw_player(t_data *data, t_minimap *minimap)
 		y = -minimap->radius;
 		while (y <= minimap->radius)
 		{
-			if (minimap->x_center + x >= 0 && minimap->x_center + x < data->mlx.img_width &&
-				minimap->y_center + y >= 0 && minimap->y_center + y < data->mlx.img_height &&
-				x * x + y * y <= minimap->radius * minimap->radius)
+			if (minimap->x_center + x >= 0 && minimap->x_center
+				+ x < data->mlx.img_width && minimap->y_center + y >= 0
+				&& minimap->y_center + y < data->mlx.img_height && x * x + y
+				* y <= minimap->radius * minimap->radius)
 			{
-				data->mlx.img_addr[(minimap->y_center + y) * data->mlx.img_width + (minimap->x_center + x)] = minimap->player_color;
+				data->mlx.img_addr[(minimap->y_center + y) * data->mlx.img_width
+					+ (minimap->x_center + x)] = minimap->player_color;
 			}
 			y++;
 		}
@@ -94,18 +97,22 @@ void draw_player(t_data *data, t_minimap *minimap)
 
 void	draw_map_background(t_data *data, t_minimap *minimap)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	y = minimap->size - minimap->size / 3;
-	while (y < data->map.height * minimap->size + minimap->size + minimap->size / 3)
+	while (y < data->map.height * minimap->size + minimap->size + minimap->size
+		/ 3)
 	{
 		x = minimap->size - minimap->size / 3;
-		while (x < data->map.width * minimap->size + minimap->size + minimap->size / 3)
+		while (x < data->map.width * minimap->size + minimap->size
+			+ minimap->size / 3)
 		{
-			if (x >= 0 && x < data->mlx.img_width && y >= 0 && y < data->mlx.img_height)
+			if (x >= 0 && x < data->mlx.img_width && y >= 0
+				&& y < data->mlx.img_height)
 			{
-				data->mlx.img_addr[y * data->mlx.img_width + x] = minimap->background_color;
+				data->mlx.img_addr[y * data->mlx.img_width
+					+ x] = minimap->background_color;
 			}
 			x++;
 		}
