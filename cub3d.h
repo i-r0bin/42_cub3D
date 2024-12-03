@@ -6,7 +6,7 @@
 /*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 03:01:02 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/11/30 21:55:12 by rilliano         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:26:46 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,17 @@ typedef struct s_map
 	int					width;
 	int					height;
 }						t_map;
+
+typedef struct s_minimap
+{
+	int					size;
+	int					x_center;
+	int					y_center;
+	int					radius;
+	int					wall_color;
+	int					background_color;
+	int					player_color;
+}						t_minimap;
 
 typedef struct s_raycast
 {
@@ -213,10 +224,10 @@ int						err_msg(char *msg, int err);
 int						render_bonus(t_data *data);
 
 // draw map
-void					draw_map(t_data *data, int mapsize);
-void 					draw_player(t_data *data, int mapsize, unsigned int color);
-void					draw_square(t_data *data, int x, int y, int mapsize, unsigned int color);
-void 					draw_circle(t_data *data, int x_center, int y_center, int radius, unsigned int color);
-void					draw_map_background(t_data *data, int mapsize, unsigned int color);
+void					draw_map(t_data *data);
+void					init_minimap(t_data *data, t_minimap *minimap);	
+void 					draw_player(t_data *data, t_minimap *minimap);
+void					draw_square(t_data *data, int x, int y, t_minimap *minimap);
+void					draw_map_background(t_data *data, t_minimap *minimap);
 
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/30 21:51:05 by rilliano          #+#    #+#             */
+/*   Updated: 2024/12/03 10:27:09 by rilliano         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	print_controls(void)
@@ -23,12 +35,9 @@ void	listen_for_input(t_data *data)
 
 int	render_bonus(t_data *data)
 {
-	int	mapsize;
-
-	mapsize = 15;
 	set_image(data);
 	render_cub(data);
-	draw_map(data, mapsize);
+	draw_map(data);
 	mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img,
 		0, 0);
 	return (0);
