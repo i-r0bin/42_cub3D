@@ -6,7 +6,7 @@
 /*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:57:03 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/11/30 21:12:52 by rilliano         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:16:55 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,16 +76,16 @@ int	check_vertical_borders(t_map *map)
 	while (i < map->width)
 	{
 		j = 0;
-		while (map->map[j] && (map->map[j][i] == ' '
-			|| i >= (int)ft_strlen(map->map[j])))
+		while (map->map[j] && (i >= (int)ft_strlen(map->map[j]) || map->map[j][i] == ' '))
 			j++;
+		if (map->map[j] == NULL)
+			return (1);
 		if (map->map[j][i] != '1')
 			return (1);
 		while (map->map[j] && map->map[j][i])
 			j++;
 		j--;
-		while (map->map[j] && (map->map[j][i] == ' '
-			|| i >= (int)ft_strlen(map->map[j])))
+		while (map->map[j] && (i >= (int)ft_strlen(map->map[j]) || map->map[j][i] == ' '))
 			j--;
 		if (map->map[j][i] != '1')
 			return (1);
