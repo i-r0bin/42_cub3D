@@ -6,7 +6,7 @@
 /*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:57:03 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/12/03 19:16:55 by rilliano         ###   ########.fr       */
+/*   Updated: 2024/12/06 22:57:37 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ int	check_map(t_data *data)
 {
 	if (data->map.map == NULL)
 		handle_error(data, ENOEXEC, "Invalid map.\tMap is missing.");
-	if (data->map.width <= 2 || data->map.height <= 2)
-		handle_error(data, ENOEXEC, "Invalid map.\tMap is too small.");
 	if (data->pov == '0')
 		handle_error(data, ENOEXEC,
 			"Invalid map.\tPlayer position is missing.");
@@ -49,56 +47,42 @@ int	check_map_characters(t_map *map)
 	return (0);
 }
 
-int	check_horizontal_borders(t_map *map)
-{
-	int	i;
-	int	last;
-
-	i = 0;
-	while (i < map->height)
-	{
-		last = ft_strlen(map->map[i]) - 1;
-		if (*line_start(map->map[i]) != '1')
-			return (1);
-		if (map->map[i][last] != '1')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	check_vertical_borders(t_map *map)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (i < map->width)
-	{
-		j = 0;
-		while (map->map[j] && (i >= (int)ft_strlen(map->map[j]) || map->map[j][i] == ' '))
-			j++;
-		if (map->map[j] == NULL)
-			return (1);
-		if (map->map[j][i] != '1')
-			return (1);
-		while (map->map[j] && map->map[j][i])
-			j++;
-		j--;
-		while (map->map[j] && (i >= (int)ft_strlen(map->map[j]) || map->map[j][i] == ' '))
-			j--;
-		if (map->map[j][i] != '1')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 int	check_map_borders(t_map *map)
 {
-	if (check_horizontal_borders(map) == 1)
-		return (1);
-	if (check_vertical_borders(map) == 1)
-		return (1);
+	int	i;
+
+	i = 0;
+	while (map && map->map[i] != NULL)
+	{
+		if (check_map_row_borders(map, i) == 1)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	check_map_row_borders(t_map *map, int i)
+{
+	int	j;
+
+	j = 0;
+	while (map->map[i][j] != '\0')
+	{
+		if (map->map[i][j] == '0')
+		{
+			if (i > 0 && (j >= (int)ft_strlen(map->map[i - 1])
+					|| map->map[i - 1][j] == ' '))
+				return (1);
+			if (i < map->height - 1 && (j >= (int)ft_strlen(map->map[i + 1])
+					|| map->map[i + 1][j] == ' '))
+				return (1);
+			if (j > 0 && map->map[i][j - 1] == ' ')
+				return (1);
+			if (j < (int)ft_strlen(map->map[i]) - 1
+				&& map->map[i][j + 1] == ' ')
+				return (1);
+		}
+		j++;
+	}
 	return (0);
 }

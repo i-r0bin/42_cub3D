@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppezzull <ppezzull@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 03:00:20 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/11/27 03:00:23 by ppezzull         ###   ########.fr       */
+/*   Updated: 2024/12/06 22:02:55 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ char	**create_new_map(t_data *data, char *line, int len)
 	if (!new_map[i])
 		handle_error(data, ENOMEM, "Memory allocation failed.");
 	ft_strlcpy(new_map[i], line, len + 1);
-	new_map[i + 1] = NULL;
 	return (new_map);
 }
 
@@ -62,6 +61,7 @@ void	update_map_data(t_data *data, char **new_map, int len)
 	if (len > data->map.width)
 		data->map.width = len;
 	update_player_position(data);
+	format_map(&data->map);
 }
 
 int	parse_map_line(t_data *data, char *line)
@@ -72,6 +72,8 @@ int	parse_map_line(t_data *data, char *line)
 	len = get_row_len(line);
 	if (len == 0)
 		return (1);
+	if (line[len - 1] == '0')
+		handle_error(data, ENOEXEC, "Invalid map.\tMap is not closed.");
 	new_map = create_new_map(data, line, len);
 	if (!new_map)
 		return (1);

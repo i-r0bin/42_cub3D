@@ -6,7 +6,7 @@
 /*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 03:01:02 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/12/03 10:26:46 by rilliano         ###   ########.fr       */
+/*   Updated: 2024/12/06 22:46:03 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,9 @@ int						parse_color(t_data *data, char *line, char c);
 int						parse_map(t_data *data, char *line, int fd);
 int						parse_map_line(t_data *data, char *line);
 int						update_player_position(t_data *data);
+void					format_map(t_map *map);
+void					fill_with_zeros(char *line);
+void					remove_extra_zeros(t_map *map, int i);
 void					set_point_of_view(t_data *data);
 void					set_horizontal_pov(t_data *data);
 void					set_vertical_pov(t_data *data);
@@ -179,6 +182,7 @@ int						check_file_path(t_data *data, char *path);
 int						check_map(t_data *data);
 int						check_map_characters(t_map *map);
 int						check_map_borders(t_map *map);
+int						check_map_row_borders(t_map *map, int i);
 
 // raycasting
 void					render_cub(t_data *data);
@@ -229,6 +233,5 @@ void					init_minimap(t_data *data, t_minimap *minimap);
 void					draw_player(t_data *data, t_minimap *minimap);
 void					draw_square(t_data *data, int x, int y,
 							t_minimap *minimap);
-void					draw_map_background(t_data *data, t_minimap *minimap);
 
 #endif

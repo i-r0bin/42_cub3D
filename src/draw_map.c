@@ -6,7 +6,7 @@
 /*   By: rilliano <rilliano@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 02:59:38 by ppezzull          #+#    #+#             */
-/*   Updated: 2024/12/03 10:27:42 by rilliano         ###   ########.fr       */
+/*   Updated: 2024/12/06 22:45:50 by rilliano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	draw_map(t_data *data)
 	t_minimap	minimap;
 
 	init_minimap(data, &minimap);
-	draw_map_background(data, &minimap);
 	y = 0;
 	while (y < data->map.height)
 	{
@@ -27,6 +26,8 @@ void	draw_map(t_data *data)
 		while (data->map.map[y][x] != '\0')
 		{
 			if (data->map.map[y][x] == '1')
+				draw_square(data, x, y, &minimap);
+			else if (data->map.map[y][x] == '0')
 				draw_square(data, x, y, &minimap);
 			x++;
 		}
@@ -46,11 +47,23 @@ void	init_minimap(t_data *data, t_minimap *minimap)
 	minimap->radius = minimap->size / 4;
 }
 
+unsigned int	get_minimap_color(t_minimap *minimap, char el)
+{
+	if (el == '1')
+		return (minimap->wall_color);
+	else if (el == '0')
+		return (minimap->background_color);
+	else
+		return (0);
+}
+
 void	draw_square(t_data *data, int x, int y, t_minimap *minimap)
 {
-	int	i;
-	int	j;
+	int				i;
+	int				j;
+	unsigned int	color;
 
+	color = get_minimap_color(minimap, data->map.map[y][x]);
 	x = x * minimap->size + minimap->size;
 	y = y * minimap->size + minimap->size;
 	i = 0;
@@ -62,8 +75,7 @@ void	draw_square(t_data *data, int x, int y, t_minimap *minimap)
 			if (x + j > data->mlx.img_width || y + i > data->mlx.img_height
 				|| x < 0 || y < 0)
 				break ;
-			data->mlx.img_addr[(y + i) * data->mlx.img_width + (x
-					+ j)] = minimap->wall_color;
+			data->mlx.img_addr[(y + i) * data->mlx.img_width + (x + j)] = color;
 			j++;
 		}
 		i++;
@@ -92,30 +104,5 @@ void	draw_player(t_data *data, t_minimap *minimap)
 			y++;
 		}
 		x++;
-	}
-}
-
-void	draw_map_background(t_data *data, t_minimap *minimap)
-{
-	int	x;
-	int	y;
-
-	y = minimap->size - minimap->size / 3;
-	while (y < data->map.height * minimap->size + minimap->size + minimap->size
-		/ 3)
-	{
-		x = minimap->size - minimap->size / 3;
-		while (x < data->map.width * minimap->size + minimap->size
-			+ minimap->size / 3)
-		{
-			if (x >= 0 && x < data->mlx.img_width && y >= 0
-				&& y < data->mlx.img_height)
-			{
-				data->mlx.img_addr[y * data->mlx.img_width
-					+ x] = minimap->background_color;
-			}
-			x++;
-		}
-		y++;
 	}
 }

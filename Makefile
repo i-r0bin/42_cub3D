@@ -15,6 +15,7 @@ SRC = \
 	$Skey_actions.c \
 	$Sparse_args.c \
 	$Sparse_map.c \
+	$Sformat_map.c \
 	$Sparse_texture.c \
 	$Scolor.c \
 	$Scolor_utils.c \
@@ -33,6 +34,7 @@ BSRC = \
 	$Skey_actions.c \
 	$Sparse_args.c \
 	$Sparse_map.c \
+	$Sformat_map.c \
 	$Sparse_texture.c \
 	$Scolor.c \
 	$Scolor_utils.c \
